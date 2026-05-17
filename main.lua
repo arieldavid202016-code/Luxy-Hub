@@ -33,9 +33,9 @@ end
 
 local Scripts = {
     {
-        Name = "KickLuckyBlox / KickBlox",
+        Name = "Kick A Lucky Blox",
         PlaceIds = { 89469502395769 },
-        ScriptURL = "https://raw.githubusercontent.com/Omnie7/Luxy-Scripts/main/Games/KickBlox.lua"
+        ScriptURL = "https://raw.githubusercontent.com/Omnie7/Luxy-Scripts/main/Games/Kick%20A%20Lucky%20Blox.lua"
     }
 }
 
