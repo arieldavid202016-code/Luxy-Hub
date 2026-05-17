@@ -1,6 +1,7 @@
 local genv = getgenv and getgenv()
 if not genv then return end
 
+-- Anti Spam Execute
 if genv.luxy_execute_debounce and (tick() - genv.luxy_execute_debounce) <= 5 then 
     return 
 end
@@ -11,9 +12,14 @@ if not game:IsLoaded() then
 end
 
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer or Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
+-- Safe wait untuk LocalPlayer (Emulator sering inject sebelum player ready)
+local LocalPlayer = Players.LocalPlayer
+while not LocalPlayer do
+    LocalPlayer = Players.LocalPlayer
+    task.wait(0.5)
+end
 
--- Anti AFK (Safe Native Roblox)
+-- Anti AFK
 local VU = game:GetService("VirtualUser")
 LocalPlayer.Idled:Connect(function()
     VU:CaptureController()
@@ -31,6 +37,9 @@ local function NotifyError(title, text)
     end)
 end
 
+-- ==========================================
+-- [ LUXY HUB - GAME DATA ]
+-- ==========================================
 local Scripts = {
     {
         Name = "Kick A Lucky Blox",
@@ -48,24 +57,43 @@ local function IsPlace(ScriptData)
     return false
 end
 
+-- ==========================================
+-- [ MAIN EXECUTOR (MOBILE SAFE) ]
+-- ==========================================
 local GameFound = false
+
 for _, ScriptData in ipairs(Scripts) do
     if IsPlace(ScriptData) then
         GameFound = true
-        print("🚀 [Luxy Hub] Detecting Games: " .. ScriptData.Name)
         
-        local success, runScript = pcall(function()
-            return loadstring(game:HttpGet(ScriptData.ScriptURL))
+        -- STEP 1: AMBIL SCRIPT DARI GITHUB (DENGAN TIMEOUT/ERROR HANDLING)
+        local success, response = pcall(function()
+            return game:HttpGet(ScriptData.ScriptURL, true)
         end)
 
-        if success and type(runScript) == "function" then
-            task.spawn(runScript)
-        else
-            NotifyError("Luxy Hub Error", "Failed to load script from server!")
+        if not success then
+            NotifyError("Luxy Hub Error", "Internet/HTTP Failed! Check connection.")
+            return
         end
+
+        if not response or response == "" then
+            NotifyError("Luxy Hub Error", "Script empty! GitHub might be down.")
+            return
+        end
+
+        -- STEP 2: LOAD STRING (PARSING)
+        local func, err = loadstring(response)
+        if not func then
+            NotifyError("Luxy Hub Error", "Parse error! Code is broken.")
+            return
+        end
+
+        -- STEP 3: JALANKAN SCRIPT
+        task.spawn(func)
         break
     end
 end
+
 if not GameFound then
     NotifyError("Luxy Hub", "This game is not yet supported by Luxy Hub!")
 end
