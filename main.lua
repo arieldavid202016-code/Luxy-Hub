@@ -13,11 +13,11 @@ end
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer or Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
 
+-- Anti AFK (Safe Native Roblox)
 local VU = game:GetService("VirtualUser")
 LocalPlayer.Idled:Connect(function()
-    VU:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-    task.wait(1)
-    VU:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    VU:CaptureController()
+    VU:ClickButton2(Vector2.new())
 end)
 
 local function NotifyError(title, text)
