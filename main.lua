@@ -27,10 +27,13 @@ while not LocalPlayer do
     task.wait(0.5)
 end
 
-local VU = game:GetService("VirtualUser")
+local VirtualUser = game:GetService("VirtualUser")
 LocalPlayer.Idled:Connect(function()
-    VU:CaptureController()
-    VU:ClickButton2(Vector2.new())
+    pcall(function()
+        VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+        task.wait(1)
+        VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    end)
 end)
 
 local CacheFolder = "LuxyHub_Cache"
