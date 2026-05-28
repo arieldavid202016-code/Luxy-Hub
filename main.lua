@@ -16,6 +16,13 @@ local LuxyGameList = {
         PlaceIds = { 89469502395769 },
         ScriptURL = "https://raw.githubusercontent.com/Omnie7/Luxy-Scripts/main/Games/Kick%20A%20Lucky%20Blox.lua",
         CacheName = "KickBlox.lua"
+    },
+    
+     {
+        Name = "Build A Ring Farm",
+        PlaceIds = { 107646426076756 },
+        ScriptURL = "https://raw.githubusercontent.com/Omnie7/Luxy-Scripts/refs/heads/main/Games/Build%20A%20Ring%20Farm.lua",
+        CacheName = "BuildRingFarm.lua"
     }
 }
 
