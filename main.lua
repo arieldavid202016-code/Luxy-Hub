@@ -28,7 +28,7 @@ local LuxyGameList = {
     {
         Name = "Slime RNG",
         PlaceIds = { 92416421522960 },
-        ScriptURL = "https://raw.githubusercontent.com/Omnie7/Luxy-Scripts/main/Games/Slime%20RNG.lua",
+        ScriptURL = "https://raw.githubusercontent.com/Omnie7/Luxy-Scripts/refs/heads/main/Games/Slime%20RNG.lua",
         CacheName = "SlimeRNG.lua"
     }
 }
