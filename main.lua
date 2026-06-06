@@ -1,128 +1,42 @@
 local genv = getgenv and getgenv()
-if not genv then return end
+if not genv then
+    return
+end
 
-if genv.luxy_execute_debounce and (tick() - genv.luxy_execute_debounce) <= 5 then 
-    return 
+if genv.luxy_execute_debounce
+    and (tick() - genv.luxy_execute_debounce) <= 5
+then
+    return
 end
 genv.luxy_execute_debounce = tick()
 
-if not game:IsLoaded() then 
-    game.Loaded:Wait() 
+if not game:IsLoaded() then
+    game.Loaded:Wait()
 end
 
-local LuxyGameList = {
-    {
-        Name = "Kick A Lucky Blox",
-        PlaceIds = { 89469502395769 },
-        ScriptURL = "https://raw.githubusercontent.com/Omnie7/Luxy-Scripts/main/Games/Kick%20A%20Lucky%20Blox.lua",
-        CacheName = "KickBlox.lua"
-    },
-     {
-        Name = "Build A Ring Farm",
-        PlaceIds = { 107646426076756 },
-        ScriptURL = "https://raw.githubusercontent.com/Omnie7/Luxy-Scripts/refs/heads/main/Games/Build%20A%20Ring%20Farm.lua",
-        CacheName = "BuildRingFarm.lua"
-    },
-    {
-        Name = "Slime RNG",
-        PlaceIds = { 92416421522960 },
-        ScriptURL = "https://raw.githubusercontent.com/Omnie7/Luxy-Scripts/refs/heads/main/Games/Slime%20RNG.lua",
-        CacheName = "SlimeRNG.lua"
-    }
+local LuxyGameList: { [number]: string } = {
+    [89469502395769]  = "Kick%20A%20Lucky%20Blox.lua",
+    [107646426076756] = "Build%20A%20Ring%20Farm.lua",
+    [92416421522960]  = "Slime%20RNG.lua",
 }
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-while not LocalPlayer do
-    LocalPlayer = Players.LocalPlayer
-    task.wait(0.5)
-end
+local targetFile = LuxyGameList[game.PlaceId]
+if targetFile then
+    local baseURL = "https://raw.githubusercontent.com/Omnie7/Luxy-Scripts/main/Games/"
+    local fullURL = baseURL .. targetFile
 
-local CacheFolder = "LuxyHub_Cache"
-
-local function fsRead(path)
-    if not readfile then return nil end
-    local s, r = pcall(readfile, path)
-    return s and r
-end
-
-local function fsWrite(path, data)
-    if not writefile then return end
-    pcall(writefile, path, data)
-end
-
-local function fsIsFile(path)
-    if not isfile then return false end
-    local s, r = pcall(isfile, path)
-    return s and r == true
-end
-
-local function fsMakeDir(path)
-    if not makefolder then return end
-    pcall(makefolder, path)
-end
-
-local function ShowCriticalError(title, text)
-    pcall(function()
-        local msg = Instance.new("Message", workspace)
-        msg.Text = "[LUXY HUB ERROR]\n" .. title .. "\n\n" .. text
-        game:GetService("Debris"):AddItem(msg, 15)
+    local success, scriptCode = pcall(function()
+        return game:HttpGet(fullURL)
     end)
-end
 
-local function fetchWithCache(url, cacheFileName)
-    local fullPath = CacheFolder .. "/" .. cacheFileName
-    local success, response = pcall(function()
-        return game:HttpGet(url, true)
-    end)
-    if success and response and response ~= "" and #response > 100 and not response:find("<!DOCTYPE html>") then
-        task.spawn(function()
-            fsMakeDir(CacheFolder)
-            fsWrite(fullPath, response)
-        end)
-        return response
-    end
-    local cachedData = fsRead(fullPath)
-    if cachedData and cachedData ~= "" and #cachedData > 100 then
-        pcall(function()
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "Luxy Hub (Offline Cache)",
-                Text = "Network unstable, loading cached version...",
-                Duration = 5
-            })
-        end)
-        return cachedData
-    end
-    ShowCriticalError(
-        "NETWORK ERROR", 
-        "Failed to fetch script & no valid local cache found."
-    )
-    return nil
-end
-
-local function IsPlace(ScriptData)
-    if ScriptData.PlaceIds and table.find(ScriptData.PlaceIds, game.PlaceId) then
-        return true
-    elseif ScriptData.GameId and ScriptData.GameId == game.GameId then
-        return true
-    end
-    return false
-end
-
-local GameFound = false
-
-for _, ScriptData in ipairs(LuxyGameList) do
-    if IsPlace(ScriptData) then
-        GameFound = true
-        local scriptCode = fetchWithCache(ScriptData.ScriptURL, ScriptData.CacheName)
-        if not scriptCode then return end
-
+    if success and scriptCode and #scriptCode > 100 then
         local func, err = loadstring(scriptCode)
-        if not func then
-            ShowCriticalError("PARSE ERROR", "Script is corrupted.\nError: " .. tostring(err))
-            return
+        if func then
+            task.spawn(func)
+        else
+            warn("[Luxy Hub] Parse Error: " .. tostring(err))
         end
-        task.spawn(func)
-        break
+    else
+        warn("[Luxy Hub] Failed to fetch secure game script from GitHub.")
     end
 end
