@@ -27,7 +27,7 @@ end
 if not LuxyLib then return end
 
 local DatabaseURL = "https://raw.githubusercontent.com/Omnie7/Luxy-Core/refs/heads/main/Modules/keys.json"
-local DiscordLink = "https://discord.gg/luxyhub"
+local DiscordLink = "https://discord.gg/Gr5UQUKp7"
 
 local KeyWindow = LuxyLib:CreateWindow({
     Title = "Luxy Hub | Licensing System",
