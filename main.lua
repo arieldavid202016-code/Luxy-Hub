@@ -14,7 +14,8 @@ local LuxyGameList: { [number]: string } = {
     [89469502395769]  = "Kick%20A%20Lucky%20Blox.lua",
     [107646426076756] = "Build%20A%20Ring%20Farm.lua",
     [92416421522960]  = "Slime%20RNG.lua",
-    [95082159892680] = "Speed%20Keyboard%20Escape.lua",
+    [95082159892680]  = "Speed%20Keyboard%20Escape.lua",
+    [118941584817777] = "Speed%20Keyboard%20Escape.lua",
 }
 
 local targetFile = LuxyGameList[game.PlaceId]
@@ -26,7 +27,7 @@ if targetFile then
         return game:HttpGet(fullURL)
     end)
 
-    if success and scriptCode and #scriptCode > 100 then
+    if success and scriptCode and not string.find(scriptCode, "404: Not Found") then
         local func, err = loadstring(scriptCode)
         if func then
             task.spawn(func)
