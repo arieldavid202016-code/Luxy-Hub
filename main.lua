@@ -1,14 +1,10 @@
 local genv = getgenv and getgenv()
-if not genv then
-    return
-end
+if not genv then return end
 
-if genv.luxy_execute_debounce
-    and (tick() - genv.luxy_execute_debounce) <= 5
-then
+if genv.luxy_router_debounce and (tick() - genv.luxy_router_debounce) <= 5 then
     return
 end
-genv.luxy_execute_debounce = tick()
+genv.luxy_router_debounce = tick()
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
