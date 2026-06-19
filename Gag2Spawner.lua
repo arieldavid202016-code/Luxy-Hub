@@ -22,7 +22,7 @@ end)
 
 print("[LUXY] Starts Loading DATA...")
 local LuxyLib = nil
-local libOk, libErr = pcall(function() -- FIX DI SINI: Menyimpan hasil return pcall
+local libOk, libErr = pcall(function()
     local code = game:HttpGet("https://raw.githubusercontent.com/Omnie7/Luxy-Hub/main/Library/LuxyHub.lua")
     if code and code ~= "" then
         local func = loadstring(code)
@@ -200,7 +200,6 @@ local function spawnVisualPlant(position, seedName)
     end
 
     local localPos = spawnPoint.CFrame:PointToObjectSpace(position)
-
     local cleanSeedName = seedName:gsub(" Seed$", ""):gsub(" SeedPack$", ""):gsub(" Seed Pack$", "")
 
     local maxAge = 100
@@ -228,7 +227,7 @@ local function spawnVisualPlant(position, seedName)
     local plantId = "FakePlant_" .. HttpService:GenerateGUID(false)
 
     local plantData = {
-        PlantName = cleanSeedName, -- FIX: Gunakan nama bersih untuk memicu model pertumbuhan asli
+        PlantName = cleanSeedName,
         Positions = {
             PosX = localPos.X,
             PosY = localPos.Y,
@@ -327,7 +326,7 @@ pcall(function()
                         replica = PlayerStateClient:GetLocalReplica() or PlayerStateClient.GetLocalReplica()
                     end)
                 end
-                if replica and replica.Data and replica.Data.Inventory and replica.Data.Inventory.Seeds then
+                if replica and replica.Data && replica.Data.Inventory and replica.Data.Inventory.Seeds then
                     local invSeed = replica.Data.Inventory.Seeds[seedName]
                     if invSeed then
                         local updatedVal = math.max(0, invSeed - 1)
