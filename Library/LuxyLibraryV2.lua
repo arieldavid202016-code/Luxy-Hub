@@ -464,47 +464,47 @@ end
 local function CheckDepbox(Box, Search)
 	local VisibleElements = 0
 	for _, ElementInfo in Box.Elements do
-local __DARKLUA_CONTINUE_3=false repeat		if ElementInfo.Type == "Divider" then
-			ElementInfo.Holder.Visible = false
-__DARKLUA_CONTINUE_3=true			break
-		elseif ElementInfo.SubButton then
-			local Visible = false
-			if string.find(ElementInfo.Text:lower(), Search, 1, true)
+		local __DARKLUA_CONTINUE_3=false repeat		if ElementInfo.Type == "Divider" then
+				ElementInfo.Holder.Visible = false
+				__DARKLUA_CONTINUE_3=true			break
+			elseif ElementInfo.SubButton then
+				local Visible = false
+				if string.find(ElementInfo.Text:lower(), Search, 1, true)
+					and ElementInfo.Visible
+				then
+					Visible = true
+				else
+					ElementInfo.Base.Visible = false
+				end
+				if string.find(ElementInfo.SubButton.Text:lower(), Search, 1, true)
+					and ElementInfo.SubButton.Visible
+				then
+					Visible = true
+				else
+					ElementInfo.SubButton.Base.Visible = false
+				end
+				ElementInfo.Holder.Visible = Visible
+				if Visible then
+					VisibleElements =VisibleElements+ 1
+				end
+				__DARKLUA_CONTINUE_3=true			break
+			end
+			if ElementInfo.Text
+				and string.find(ElementInfo.Text:lower(), Search, 1, true)
 				and ElementInfo.Visible
 			then
-				Visible = true
-			else
-				ElementInfo.Base.Visible = false
-			end
-			if string.find(ElementInfo.SubButton.Text:lower(), Search, 1, true)
-				and ElementInfo.SubButton.Visible
-			then
-				Visible = true
-			else
-				ElementInfo.SubButton.Base.Visible = false
-			end
-			ElementInfo.Holder.Visible = Visible
-			if Visible then
+				ElementInfo.Holder.Visible = true
 				VisibleElements =VisibleElements+ 1
+			else
+				ElementInfo.Holder.Visible = false
 			end
-__DARKLUA_CONTINUE_3=true			break
-		end
-		if ElementInfo.Text
-			and string.find(ElementInfo.Text:lower(), Search, 1, true)
-			and ElementInfo.Visible
-		then
-			ElementInfo.Holder.Visible = true
-			VisibleElements =VisibleElements+ 1
-		else
-			ElementInfo.Holder.Visible = false
-		end
-__DARKLUA_CONTINUE_3=true until true if not __DARKLUA_CONTINUE_3 then break end	end
+			__DARKLUA_CONTINUE_3=true until true if not __DARKLUA_CONTINUE_3 then break end	end
 	for _, Depbox in Box.DependencyBoxes do
-local __DARKLUA_CONTINUE_4=false repeat		if not Depbox.Visible then
-__DARKLUA_CONTINUE_4=true			break
-		end
-		VisibleElements =VisibleElements+ CheckDepbox(Depbox, Search)
-__DARKLUA_CONTINUE_4=true until true if not __DARKLUA_CONTINUE_4 then break end	end
+		local __DARKLUA_CONTINUE_4=false repeat		if not Depbox.Visible then
+				__DARKLUA_CONTINUE_4=true			break
+			end
+			VisibleElements =VisibleElements+ CheckDepbox(Depbox, Search)
+			__DARKLUA_CONTINUE_4=true until true if not __DARKLUA_CONTINUE_4 then break end	end
 	if Box.InnerTabboxes then
 		for _, InnerTabbox in Box.InnerTabboxes do
 			local VisibleTabs = 0
@@ -512,57 +512,57 @@ __DARKLUA_CONTINUE_4=true until true if not __DARKLUA_CONTINUE_4 then break end	
 			for _, SubTab in InnerTabbox.Tabs do
 				InnerVisibleElements[SubTab] = 0
 				for _, ElementInfo in SubTab.Elements do
-local __DARKLUA_CONTINUE_7=false repeat					if ElementInfo.Type == "Divider" then
-						ElementInfo.Holder.Visible = false
-__DARKLUA_CONTINUE_7=true						break
-					elseif ElementInfo.SubButton then
-						local Visible = false
-						if string.find(ElementInfo.Text:lower(), Search, 1, true)
-							and ElementInfo.Visible
-						then
-							Visible = true
-						else
-							ElementInfo.Base.Visible = false
+					local __DARKLUA_CONTINUE_7=false repeat					if ElementInfo.Type == "Divider" then
+							ElementInfo.Holder.Visible = false
+							__DARKLUA_CONTINUE_7=true						break
+						elseif ElementInfo.SubButton then
+							local Visible = false
+							if string.find(ElementInfo.Text:lower(), Search, 1, true)
+								and ElementInfo.Visible
+							then
+								Visible = true
+							else
+								ElementInfo.Base.Visible = false
+							end
+							if string.find(
+								ElementInfo.SubButton.Text:lower(),
+								Search,
+								1,
+								true
+								)
+									and ElementInfo.SubButton.Visible
+							then
+								Visible = true
+							else
+								ElementInfo.SubButton.Base.Visible = false
+							end
+							ElementInfo.Holder.Visible = Visible
+							if Visible then
+								InnerVisibleElements[SubTab]=InnerVisibleElements[SubTab]+ 1
+							end
+							__DARKLUA_CONTINUE_7=true						break
 						end
-						if string.find(
-							ElementInfo.SubButton.Text:lower(),
-							Search,
-							1,
-							true
+						if ElementInfo.Text
+							and string.find(
+								ElementInfo.Text:lower(),
+								Search,
+								1,
+								true
 							)
-								and ElementInfo.SubButton.Visible
+								and ElementInfo.Visible
 						then
-							Visible = true
-						else
-							ElementInfo.SubButton.Base.Visible = false
-						end
-						ElementInfo.Holder.Visible = Visible
-						if Visible then
+							ElementInfo.Holder.Visible = true
 							InnerVisibleElements[SubTab]=InnerVisibleElements[SubTab]+ 1
+						else
+							ElementInfo.Holder.Visible = false
 						end
-__DARKLUA_CONTINUE_7=true						break
-					end
-					if ElementInfo.Text
-						and string.find(
-							ElementInfo.Text:lower(),
-							Search,
-							1,
-							true
-						)
-							and ElementInfo.Visible
-					then
-						ElementInfo.Holder.Visible = true
-						InnerVisibleElements[SubTab]=InnerVisibleElements[SubTab]+ 1
-					else
-						ElementInfo.Holder.Visible = false
-					end
-__DARKLUA_CONTINUE_7=true until true if not __DARKLUA_CONTINUE_7 then break end				end
+						__DARKLUA_CONTINUE_7=true until true if not __DARKLUA_CONTINUE_7 then break end				end
 				for _, Depbox in SubTab.DependencyBoxes do
-local __DARKLUA_CONTINUE_8=false repeat					if not Depbox.Visible then
-__DARKLUA_CONTINUE_8=true						break
-					end
-					InnerVisibleElements[SubTab]=InnerVisibleElements[SubTab]+ CheckDepbox(Depbox, Search)
-__DARKLUA_CONTINUE_8=true until true if not __DARKLUA_CONTINUE_8 then break end				end
+					local __DARKLUA_CONTINUE_8=false repeat					if not Depbox.Visible then
+							__DARKLUA_CONTINUE_8=true						break
+						end
+						InnerVisibleElements[SubTab]=InnerVisibleElements[SubTab]+ CheckDepbox(Depbox, Search)
+						__DARKLUA_CONTINUE_8=true until true if not __DARKLUA_CONTINUE_8 then break end				end
 			end
 			for SubTab, Visible in InnerVisibleElements do
 				SubTab.ButtonHolder.Visible = Visible > 0
@@ -600,11 +600,11 @@ local function RestoreDepbox(Box)
 	Box:Resize()
 	Box.Holder.Visible = true
 	for _, Depbox in Box.DependencyBoxes do
-local __DARKLUA_CONTINUE_11=false repeat		if not Depbox.Visible then
-__DARKLUA_CONTINUE_11=true			break
-		end
-		RestoreDepbox(Depbox)
-__DARKLUA_CONTINUE_11=true until true if not __DARKLUA_CONTINUE_11 then break end	end
+		local __DARKLUA_CONTINUE_11=false repeat		if not Depbox.Visible then
+				__DARKLUA_CONTINUE_11=true			break
+			end
+			RestoreDepbox(Depbox)
+			__DARKLUA_CONTINUE_11=true until true if not __DARKLUA_CONTINUE_11 then break end	end
 	if Box.InnerTabboxes then
 		for _, InnerTabbox in Box.InnerTabboxes do
 			for _, SubTab in InnerTabbox.Tabs do
@@ -620,11 +620,11 @@ __DARKLUA_CONTINUE_11=true until true if not __DARKLUA_CONTINUE_11 then break en
 					end
 				end
 				for _, Depbox in SubTab.DependencyBoxes do
-local __DARKLUA_CONTINUE_15=false repeat					if not Depbox.Visible then
-__DARKLUA_CONTINUE_15=true						break
-					end
-					RestoreDepbox(Depbox)
-__DARKLUA_CONTINUE_15=true until true if not __DARKLUA_CONTINUE_15 then break end				end
+					local __DARKLUA_CONTINUE_15=false repeat					if not Depbox.Visible then
+							__DARKLUA_CONTINUE_15=true						break
+						end
+						RestoreDepbox(Depbox)
+						__DARKLUA_CONTINUE_15=true until true if not __DARKLUA_CONTINUE_15 then break end				end
 				SubTab.ButtonHolder.Visible = true
 			end
 			if InnerTabbox.ActiveTab then
@@ -643,109 +643,109 @@ local function ApplySearchToTab(Tab, Search)
 	for _, Groupbox in Tab.Groupboxes do
 		local VisibleElements = 0
 		for _, ElementInfo in Groupbox.Elements do
-local __DARKLUA_CONTINUE_17=false repeat			if ElementInfo.Type == "Divider" then
-				ElementInfo.Holder.Visible = false
-__DARKLUA_CONTINUE_17=true				break
-			elseif ElementInfo.SubButton then
-				local Visible = false
-				if string.find(ElementInfo.Text:lower(), Search, 1, true)
+			local __DARKLUA_CONTINUE_17=false repeat			if ElementInfo.Type == "Divider" then
+					ElementInfo.Holder.Visible = false
+					__DARKLUA_CONTINUE_17=true				break
+				elseif ElementInfo.SubButton then
+					local Visible = false
+					if string.find(ElementInfo.Text:lower(), Search, 1, true)
+						and ElementInfo.Visible
+					then
+						Visible = true
+					else
+						ElementInfo.Base.Visible = false
+					end
+					if string.find(
+						ElementInfo.SubButton.Text:lower(),
+						Search,
+						1,
+						true
+						)
+							and ElementInfo.SubButton.Visible
+					then
+						Visible = true
+					else
+						ElementInfo.SubButton.Base.Visible = false
+					end
+					ElementInfo.Holder.Visible = Visible
+					if Visible then
+						VisibleElements =VisibleElements+ 1
+					end
+					__DARKLUA_CONTINUE_17=true				break
+				end
+				if ElementInfo.Text
+					and string.find(ElementInfo.Text:lower(), Search, 1, true)
 					and ElementInfo.Visible
 				then
-					Visible = true
-				else
-					ElementInfo.Base.Visible = false
-				end
-				if string.find(
-					ElementInfo.SubButton.Text:lower(),
-					Search,
-					1,
-					true
-					)
-						and ElementInfo.SubButton.Visible
-				then
-					Visible = true
-				else
-					ElementInfo.SubButton.Base.Visible = false
-				end
-				ElementInfo.Holder.Visible = Visible
-				if Visible then
+					ElementInfo.Holder.Visible = true
 					VisibleElements =VisibleElements+ 1
+				else
+					ElementInfo.Holder.Visible = false
 				end
-__DARKLUA_CONTINUE_17=true				break
-			end
-			if ElementInfo.Text
-				and string.find(ElementInfo.Text:lower(), Search, 1, true)
-				and ElementInfo.Visible
-			then
-				ElementInfo.Holder.Visible = true
-				VisibleElements =VisibleElements+ 1
-			else
-				ElementInfo.Holder.Visible = false
-			end
-__DARKLUA_CONTINUE_17=true until true if not __DARKLUA_CONTINUE_17 then break end		end
+				__DARKLUA_CONTINUE_17=true until true if not __DARKLUA_CONTINUE_17 then break end		end
 		for _, Depbox in Groupbox.DependencyBoxes do
-local __DARKLUA_CONTINUE_18=false repeat			if not Depbox.Visible then
-__DARKLUA_CONTINUE_18=true				break
-			end
-			VisibleElements =VisibleElements+ CheckDepbox(Depbox, Search)
-__DARKLUA_CONTINUE_18=true until true if not __DARKLUA_CONTINUE_18 then break end		end
+			local __DARKLUA_CONTINUE_18=false repeat			if not Depbox.Visible then
+					__DARKLUA_CONTINUE_18=true				break
+				end
+				VisibleElements =VisibleElements+ CheckDepbox(Depbox, Search)
+				__DARKLUA_CONTINUE_18=true until true if not __DARKLUA_CONTINUE_18 then break end		end
 		for _, InnerTabbox in Groupbox.InnerTabboxes do
 			local VisibleTabs = 0
 			local InnerVisibleElements = {}
 			for _, SubTab in InnerTabbox.Tabs do
 				InnerVisibleElements[SubTab] = 0
 				for _, ElementInfo in SubTab.Elements do
-local __DARKLUA_CONTINUE_21=false repeat					if ElementInfo.Type == "Divider" then
-						ElementInfo.Holder.Visible = false
-__DARKLUA_CONTINUE_21=true						break
-					elseif ElementInfo.SubButton then
-						local Visible = false
-						if string.find(ElementInfo.Text:lower(), Search, 1, true)
-							and ElementInfo.Visible
-						then
-							Visible = true
-						else
-							ElementInfo.Base.Visible = false
+					local __DARKLUA_CONTINUE_21=false repeat					if ElementInfo.Type == "Divider" then
+							ElementInfo.Holder.Visible = false
+							__DARKLUA_CONTINUE_21=true						break
+						elseif ElementInfo.SubButton then
+							local Visible = false
+							if string.find(ElementInfo.Text:lower(), Search, 1, true)
+								and ElementInfo.Visible
+							then
+								Visible = true
+							else
+								ElementInfo.Base.Visible = false
+							end
+							if string.find(
+								ElementInfo.SubButton.Text:lower(),
+								Search,
+								1,
+								true
+								)
+									and ElementInfo.SubButton.Visible
+							then
+								Visible = true
+							else
+								ElementInfo.SubButton.Base.Visible = false
+							end
+							ElementInfo.Holder.Visible = Visible
+							if Visible then
+								InnerVisibleElements[SubTab]=InnerVisibleElements[SubTab]+ 1
+							end
+							__DARKLUA_CONTINUE_21=true						break
 						end
-						if string.find(
-							ElementInfo.SubButton.Text:lower(),
-							Search,
-							1,
-							true
+						if ElementInfo.Text
+							and string.find(
+								ElementInfo.Text:lower(),
+								Search,
+								1,
+								true
 							)
-								and ElementInfo.SubButton.Visible
+								and ElementInfo.Visible
 						then
-							Visible = true
-						else
-							ElementInfo.SubButton.Base.Visible = false
-						end
-						ElementInfo.Holder.Visible = Visible
-						if Visible then
+							ElementInfo.Holder.Visible = true
 							InnerVisibleElements[SubTab]=InnerVisibleElements[SubTab]+ 1
+						else
+							ElementInfo.Holder.Visible = false
 						end
-__DARKLUA_CONTINUE_21=true						break
-					end
-					if ElementInfo.Text
-						and string.find(
-							ElementInfo.Text:lower(),
-							Search,
-							1,
-							true
-						)
-							and ElementInfo.Visible
-					then
-						ElementInfo.Holder.Visible = true
-						InnerVisibleElements[SubTab]=InnerVisibleElements[SubTab]+ 1
-					else
-						ElementInfo.Holder.Visible = false
-					end
-__DARKLUA_CONTINUE_21=true until true if not __DARKLUA_CONTINUE_21 then break end				end
+						__DARKLUA_CONTINUE_21=true until true if not __DARKLUA_CONTINUE_21 then break end				end
 				for _, Depbox in SubTab.DependencyBoxes do
-local __DARKLUA_CONTINUE_22=false repeat					if not Depbox.Visible then
-__DARKLUA_CONTINUE_22=true						break
-					end
-					InnerVisibleElements[SubTab]=InnerVisibleElements[SubTab]+ CheckDepbox(Depbox, Search)
-__DARKLUA_CONTINUE_22=true until true if not __DARKLUA_CONTINUE_22 then break end				end
+					local __DARKLUA_CONTINUE_22=false repeat					if not Depbox.Visible then
+							__DARKLUA_CONTINUE_22=true						break
+						end
+						InnerVisibleElements[SubTab]=InnerVisibleElements[SubTab]+ CheckDepbox(Depbox, Search)
+						__DARKLUA_CONTINUE_22=true until true if not __DARKLUA_CONTINUE_22 then break end				end
 			end
 			for SubTab, Visible in InnerVisibleElements do
 				SubTab.ButtonHolder.Visible = Visible > 0
@@ -776,57 +776,57 @@ __DARKLUA_CONTINUE_22=true until true if not __DARKLUA_CONTINUE_22 then break en
 		for _, SubTab in Tabbox.Tabs do
 			VisibleElements[SubTab] = 0
 			for _, ElementInfo in SubTab.Elements do
-local __DARKLUA_CONTINUE_26=false repeat				if ElementInfo.Type == "Divider" then
-					ElementInfo.Holder.Visible = false
-__DARKLUA_CONTINUE_26=true					break
-				elseif ElementInfo.SubButton then
-					local Visible = false
-					if string.find(ElementInfo.Text:lower(), Search, 1, true)
-						and ElementInfo.Visible
-					then
-						Visible = true
-					else
-						ElementInfo.Base.Visible = false
+				local __DARKLUA_CONTINUE_26=false repeat				if ElementInfo.Type == "Divider" then
+						ElementInfo.Holder.Visible = false
+						__DARKLUA_CONTINUE_26=true					break
+					elseif ElementInfo.SubButton then
+						local Visible = false
+						if string.find(ElementInfo.Text:lower(), Search, 1, true)
+							and ElementInfo.Visible
+						then
+							Visible = true
+						else
+							ElementInfo.Base.Visible = false
+						end
+						if string.find(
+							ElementInfo.SubButton.Text:lower(),
+							Search,
+							1,
+							true
+							)
+								and ElementInfo.SubButton.Visible
+						then
+							Visible = true
+						else
+							ElementInfo.SubButton.Base.Visible = false
+						end
+						ElementInfo.Holder.Visible = Visible
+						if Visible then
+							VisibleElements[SubTab]=VisibleElements[SubTab]+ 1
+						end
+						__DARKLUA_CONTINUE_26=true					break
 					end
-					if string.find(
-						ElementInfo.SubButton.Text:lower(),
-						Search,
-						1,
-						true
+					if ElementInfo.Text
+						and string.find(
+							ElementInfo.Text:lower(),
+							Search,
+							1,
+							true
 						)
-							and ElementInfo.SubButton.Visible
+							and ElementInfo.Visible
 					then
-						Visible = true
-					else
-						ElementInfo.SubButton.Base.Visible = false
-					end
-					ElementInfo.Holder.Visible = Visible
-					if Visible then
+						ElementInfo.Holder.Visible = true
 						VisibleElements[SubTab]=VisibleElements[SubTab]+ 1
+					else
+						ElementInfo.Holder.Visible = false
 					end
-__DARKLUA_CONTINUE_26=true					break
-				end
-				if ElementInfo.Text
-					and string.find(
-						ElementInfo.Text:lower(),
-						Search,
-						1,
-						true
-					)
-						and ElementInfo.Visible
-				then
-					ElementInfo.Holder.Visible = true
-					VisibleElements[SubTab]=VisibleElements[SubTab]+ 1
-				else
-					ElementInfo.Holder.Visible = false
-				end
-__DARKLUA_CONTINUE_26=true until true if not __DARKLUA_CONTINUE_26 then break end			end
+					__DARKLUA_CONTINUE_26=true until true if not __DARKLUA_CONTINUE_26 then break end			end
 			for _, Depbox in SubTab.DependencyBoxes do
-local __DARKLUA_CONTINUE_27=false repeat				if not Depbox.Visible then
-__DARKLUA_CONTINUE_27=true					break
-				end
-				VisibleElements[SubTab]=VisibleElements[SubTab]+ CheckDepbox(Depbox, Search)
-__DARKLUA_CONTINUE_27=true until true if not __DARKLUA_CONTINUE_27 then break end			end
+				local __DARKLUA_CONTINUE_27=false repeat				if not Depbox.Visible then
+						__DARKLUA_CONTINUE_27=true					break
+					end
+					VisibleElements[SubTab]=VisibleElements[SubTab]+ CheckDepbox(Depbox, Search)
+					__DARKLUA_CONTINUE_27=true until true if not __DARKLUA_CONTINUE_27 then break end			end
 		end
 		for SubTab, Visible in VisibleElements do
 			SubTab.ButtonHolder.Visible = Visible > 0
@@ -865,11 +865,11 @@ local function ResetTab(Tab)
 			end
 		end
 		for _, Depbox in Groupbox.DependencyBoxes do
-local __DARKLUA_CONTINUE_31=false repeat			if not Depbox.Visible then
-__DARKLUA_CONTINUE_31=true				break
-			end
-			RestoreDepbox(Depbox)
-__DARKLUA_CONTINUE_31=true until true if not __DARKLUA_CONTINUE_31 then break end		end
+			local __DARKLUA_CONTINUE_31=false repeat			if not Depbox.Visible then
+					__DARKLUA_CONTINUE_31=true				break
+				end
+				RestoreDepbox(Depbox)
+				__DARKLUA_CONTINUE_31=true until true if not __DARKLUA_CONTINUE_31 then break end		end
 		Groupbox:Resize()
 		Groupbox.BoxHolder.Visible = true
 	end
@@ -1068,19 +1068,19 @@ function Library:Validate(
 	Table,
 	Template
 )	
-if typeof(Table) ~= "table" then
+	if typeof(Table) ~= "table" then
 		return Template
 	end
 	for k, v in Template do
-local __DARKLUA_CONTINUE_44=false repeat		if typeof(k) == "number" then
-__DARKLUA_CONTINUE_44=true			break
-		end
-		if typeof(v) == "table" then
-			Table[k] = Library:Validate(Table[k], v)
-		elseif Table[k] == nil then
-			Table[k] = v
-		end
-__DARKLUA_CONTINUE_44=true until true if not __DARKLUA_CONTINUE_44 then break end	end
+		local __DARKLUA_CONTINUE_44=false repeat		if typeof(k) == "number" then
+				__DARKLUA_CONTINUE_44=true			break
+			end
+			if typeof(v) == "table" then
+				Table[k] = Library:Validate(Table[k], v)
+			elseif Table[k] == nil then
+				Table[k] = v
+			end
+			__DARKLUA_CONTINUE_44=true until true if not __DARKLUA_CONTINUE_44 then break end	end
 	return Table
 end
 
@@ -1110,7 +1110,7 @@ local function New(
 	ClassName,
 	Properties
 )	
-local Instance = Instance.new(ClassName)
+	local Instance = Instance.new(ClassName)
 	if Templates[ClassName] then
 		FillInstance(Templates[ClassName], Instance)
 	end
@@ -1267,7 +1267,7 @@ function Library:ChangeCursorIconSize(Size)
 	CursorCustomImage.Size = Size
 end
 function Library:GetBetterColor(Color, Add)	
-Add = Add * (Library.IsLightTheme and -4 or 2)
+	Add = Add * (Library.IsLightTheme and -4 or 2)
 	return Color3.fromRGB(
 		math.clamp(Color.R * 255 + Add, 0, 255),
 		math.clamp(Color.G * 255 + Add, 0, 255),
@@ -1275,7 +1275,7 @@ Add = Add * (Library.IsLightTheme and -4 or 2)
 	)
 end
 function Library:GetLighterColor(Color)	
-local H, S, V = Color:ToHSV()
+	local H, S, V = Color:ToHSV()
 	return Color3.fromHSV(
 		H,
 		math.max(0, S - 0.1),
@@ -1283,7 +1283,7 @@ local H, S, V = Color:ToHSV()
 	)
 end
 function Library:GetDarkerColor(Color)	
-local H, S, V = Color:ToHSV()
+	local H, S, V = Color:ToHSV()
 	return Color3.fromHSV(H, S, V / 2)
 end
 function Library:GetKeyString(KeyCode)
@@ -1301,7 +1301,7 @@ function Library:GetTextBounds(
 	Size,
 	Width
 )	
-local Params = Instance.new("GetTextBoundsParams")
+	local Params = Instance.new("GetTextBoundsParams")
 	Params.Text = Text
 	Params.RichText = true
 	Params.Font = Font
@@ -1315,7 +1315,7 @@ function Library:MouseIsOverFrame(
 	Frame,
 	Mouse
 )	
-local AbsPos, AbsSize = Frame.AbsolutePosition, Frame.AbsoluteSize
+	local AbsPos, AbsSize = Frame.AbsolutePosition, Frame.AbsoluteSize
 	return Mouse.X >= AbsPos.X
 		and Mouse.X <= AbsPos.X + AbsSize.X
 		and Mouse.Y >= AbsPos.Y
@@ -1929,7 +1929,7 @@ function Library:AddTooltip(
 	end
 	local function GiveSignal(
 		Connection	
-)
+	)
 		local ConnectionType = typeof(Connection)
 		if Connection
 			and (
@@ -2084,14 +2084,14 @@ do
 		local GetActiveModifiers = function()
 			local ActiveModifiers = {}
 			for Name, Input in Modifiers do
-local __DARKLUA_CONTINUE_51=false repeat				if table.find(ActiveModifiers, Name) then
-__DARKLUA_CONTINUE_51=true					break
-				end
-				if not UserInputService:IsKeyDown(Input) then
-__DARKLUA_CONTINUE_51=true					break
-				end
-				table.insert(ActiveModifiers, Name)
-__DARKLUA_CONTINUE_51=true until true if not __DARKLUA_CONTINUE_51 then break end			end
+				local __DARKLUA_CONTINUE_51=false repeat				if table.find(ActiveModifiers, Name) then
+						__DARKLUA_CONTINUE_51=true					break
+					end
+					if not UserInputService:IsKeyDown(Input) then
+						__DARKLUA_CONTINUE_51=true					break
+					end
+					table.insert(ActiveModifiers, Name)
+					__DARKLUA_CONTINUE_51=true until true if not __DARKLUA_CONTINUE_51 then break end			end
 			return ActiveModifiers
 		end
 		local AreModifiersHeld = function(Required)
@@ -2104,12 +2104,12 @@ __DARKLUA_CONTINUE_51=true until true if not __DARKLUA_CONTINUE_51 then break en
 			local ActiveModifiers = GetActiveModifiers()
 			local Holding = true
 			for _, Name in Required do
-local __DARKLUA_CONTINUE_52=false repeat				if table.find(ActiveModifiers, Name) then
-__DARKLUA_CONTINUE_52=true					break
-				end
-				Holding = false
-				break
-until true if not __DARKLUA_CONTINUE_52 then break end			end
+				local __DARKLUA_CONTINUE_52=false repeat				if table.find(ActiveModifiers, Name) then
+						__DARKLUA_CONTINUE_52=true					break
+					end
+					Holding = false
+					break
+				until true if not __DARKLUA_CONTINUE_52 then break end			end
 			return Holding
 		end
 		local IsInputDown = function(Input)
@@ -2141,11 +2141,11 @@ until true if not __DARKLUA_CONTINUE_52 then break end			end
 			end
 			local ValidModifiers = {}
 			for _, name in CurrentModifiers do
-local __DARKLUA_CONTINUE_54=false repeat				if not Modifiers[name] then
-__DARKLUA_CONTINUE_54=true					break
-				end
-				table.insert(ValidModifiers, name)
-__DARKLUA_CONTINUE_54=true until true if not __DARKLUA_CONTINUE_54 then break end			end
+				local __DARKLUA_CONTINUE_54=false repeat				if not Modifiers[name] then
+						__DARKLUA_CONTINUE_54=true					break
+					end
+					table.insert(ValidModifiers, name)
+					__DARKLUA_CONTINUE_54=true until true if not __DARKLUA_CONTINUE_54 then break end			end
 			return ValidModifiers
 		end
 		KeyPicker.Modifiers = VerifyModifiers(KeyPicker.Modifiers)
@@ -2420,18 +2420,18 @@ __DARKLUA_CONTINUE_54=true until true if not __DARKLUA_CONTINUE_54 then break en
 				KeyPicker.Value = "Unknown"
 			end
 			KeyPicker.Modifiers = VerifyModifiers(
-(typeof(Modifiers) == "table"
-and{Modifiers
-}or{KeyPicker.Modifiers
-})[1]			)
+				(typeof(Modifiers) == "table"
+					and{Modifiers
+					}or{KeyPicker.Modifiers
+					})[1]			)
 			KeyPicker.DisplayValue = (GetTableSize(KeyPicker.Modifiers) > 0
-and{(
+				and{(
 					table.concat(KeyPicker.Modifiers, " + ")
-					.. " + "
-					.. KeyPicker.Value
-				)
-}or{KeyPicker.Value
-})[1]			if ModeButtons[Mode] then
+						.. " + "
+						.. KeyPicker.Value
+					)
+				}or{KeyPicker.Value
+				})[1]			if ModeButtons[Mode] then
 				ModeButtons[Mode]:Select()
 			end
 			local NewModifiers = ConvertToInputModifiers(
@@ -2538,8 +2538,8 @@ and{(
 			end
 			ActiveModifiers = (Input.KeyCode == Enum.KeyCode.Escape
 				or Key == "Unknown"
-)and{}
-or ActiveModifiers
+			)and{}
+				or ActiveModifiers
 			KeyPicker.Toggled = false
 			KeyPicker:SetValue({
 				Key,
@@ -3588,20 +3588,20 @@ do
 				if Button.Disabled then return end
 				Button.Tween = TweenService:Create(Button.Base, Library.TweenInfo, { TextTransparency = 0.4 })
 				Button.Tween:Play()
-				
+
 				TweenService:Create(Button.Stroke, Library.TweenInfo, { Color = Library.Scheme.OutlineColor }):Play()
 			end)
 
-			
+
 			Button.Base.InputBegan:Connect(function(Input)
 				if Button.Disabled or Button.Locked then return end
 				if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-					
+
 					TweenService:Create(Button.Stroke, TweenInfo.new(0.05), { Color = Library.Scheme.OutlineColor:Lerp(Library.Scheme.AccentColor, 0.15) }):Play()
 				end
 			end)
 
-			
+
 			Button.Base.InputEnded:Connect(function(Input)
 				if Button.Disabled or Button.Locked then return end
 				if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
@@ -4229,7 +4229,7 @@ do
 			Parent = Box,
 		})
 
-		
+
 		Box.MouseEnter:Connect(function()
 			if Input.Disabled or Box:IsFocused() then return end
 			TweenService:Create(Box, Library.TweenInfo, { BorderColor3 = Library.Scheme.OutlineColor:Lerp(Library.Scheme.AccentColor, 0.15) }):Play()
@@ -4518,7 +4518,7 @@ do
 			Slider:Display()
 		end
 
-		
+
 		Bar.MouseEnter:Connect(function()
 			if Slider.Disabled then return end
 			TweenService:Create(Bar, Library.TweenInfo, { BorderColor3 = Library.Scheme.OutlineColor:Lerp(Library.Scheme.AccentColor, 0.3) }):Play()
@@ -4662,7 +4662,7 @@ do
 			Parent = Display,
 		})
 
-		
+
 		local SearchBox
 		if Info.Searchable ~= false then 
 			SearchBox = New("TextBox", {
@@ -4693,7 +4693,7 @@ do
 					SearchBox.Text = ""
 					SearchBox.Visible = Active
 					if Active then
-						
+
 						task.defer(function() SearchBox:CaptureFocus() end)
 					end
 				end
@@ -4702,7 +4702,7 @@ do
 		)
 		Dropdown.Menu = MenuTable
 
-		
+
 		Display.MouseEnter:Connect(function()
 			if Dropdown.Disabled or MenuTable.Active then return end
 			TweenService:Create(Display, Library.TweenInfo, { BorderColor3 = Library.Scheme.OutlineColor:Lerp(Library.Scheme.AccentColor, 0.15) }):Play()
@@ -4759,48 +4759,48 @@ do
 			table.clear(Buttons)
 			local Count = 0
 			for _, Value in Values do
-local __DARKLUA_CONTINUE_76=false repeat				if SearchBox and not string.find(tostring(Value):lower(), SearchBox.Text:lower(), 1, true) then __DARKLUA_CONTINUE_76=true break end
-				Count =Count+ 1
-				local IsDisabled = table.find(DisabledValues, Value)
-				local Table = {}
-				local Button = New("TextButton", {
-					BackgroundColor3 = "MainColor",
-					BackgroundTransparency = 1,
-					LayoutOrder = IsDisabled and 1 or 0,
-					Size = UDim2.new(1, 0, 0, 24),
-					Text = tostring(Value),
-					TextSize = 14,
-					TextTransparency = 0.5,
-					TextXAlignment = Enum.TextXAlignment.Left,
-					Parent = MenuTable.Menu,
-				})
-				New("UIPadding", { PaddingLeft = UDim.new(0, 7), PaddingRight = UDim.new(0, 7), Parent = Button })
-				local Selected
-				if Info.Multi then Selected = Dropdown.Value[Value] else Selected = Dropdown.Value == Value end
-				function Table:UpdateButton()
+				local __DARKLUA_CONTINUE_76=false repeat				if SearchBox and not string.find(tostring(Value):lower(), SearchBox.Text:lower(), 1, true) then __DARKLUA_CONTINUE_76=true break end
+					Count =Count+ 1
+					local IsDisabled = table.find(DisabledValues, Value)
+					local Table = {}
+					local Button = New("TextButton", {
+						BackgroundColor3 = "MainColor",
+						BackgroundTransparency = 1,
+						LayoutOrder = IsDisabled and 1 or 0,
+						Size = UDim2.new(1, 0, 0, 24),
+						Text = tostring(Value),
+						TextSize = 14,
+						TextTransparency = 0.5,
+						TextXAlignment = Enum.TextXAlignment.Left,
+						Parent = MenuTable.Menu,
+					})
+					New("UIPadding", { PaddingLeft = UDim.new(0, 7), PaddingRight = UDim.new(0, 7), Parent = Button })
+					local Selected
 					if Info.Multi then Selected = Dropdown.Value[Value] else Selected = Dropdown.Value == Value end
-					Button.BackgroundTransparency = Selected and 0 or 1
-					Button.TextTransparency = IsDisabled and 0.8 or Selected and 0 or 0.5
-				end
-				if not IsDisabled then
-					Button.MouseButton1Click:Connect(function()
-						local Try = not Selected
-						if not (Dropdown:GetActiveValues() == 1 and not Try and not Info.AllowNull) then
-							Selected = Try
-							if Info.Multi then Dropdown.Value[Value] = Selected and true or nil else Dropdown.Value = Selected and Value or nil end
-							for _, OtherButton in Buttons do OtherButton:UpdateButton() end
-						end
-						Table:UpdateButton()
-						Dropdown:Display()
-						Library:UpdateDependencyBoxes()
-						Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
-						Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
-					end)
-				end
-				Table:UpdateButton()
-				Dropdown:Display()
-				Buttons[Button] = Table
-__DARKLUA_CONTINUE_76=true until true if not __DARKLUA_CONTINUE_76 then break end			end
+					function Table:UpdateButton()
+						if Info.Multi then Selected = Dropdown.Value[Value] else Selected = Dropdown.Value == Value end
+						Button.BackgroundTransparency = Selected and 0 or 1
+						Button.TextTransparency = IsDisabled and 0.8 or Selected and 0 or 0.5
+					end
+					if not IsDisabled then
+						Button.MouseButton1Click:Connect(function()
+							local Try = not Selected
+							if not (Dropdown:GetActiveValues() == 1 and not Try and not Info.AllowNull) then
+								Selected = Try
+								if Info.Multi then Dropdown.Value[Value] = Selected and true or nil else Dropdown.Value = Selected and Value or nil end
+								for _, OtherButton in Buttons do OtherButton:UpdateButton() end
+							end
+							Table:UpdateButton()
+							Dropdown:Display()
+							Library:UpdateDependencyBoxes()
+							Library:SafeCallback(Dropdown.Callback, Dropdown.Value)
+							Library:SafeCallback(Dropdown.Changed, Dropdown.Value)
+						end)
+					end
+					Table:UpdateButton()
+					Dropdown:Display()
+					Buttons[Button] = Table
+					__DARKLUA_CONTINUE_76=true until true if not __DARKLUA_CONTINUE_76 then break end			end
 			Dropdown:RecalculateListSize(Count)
 		end
 
@@ -4916,7 +4916,7 @@ __DARKLUA_CONTINUE_76=true until true if not __DARKLUA_CONTINUE_76 then break en
 			end
 		end
 
-		
+
 		local Viewport = {
 			Object = ViewportObject,
 			Camera = Info.Camera or Instance.new("Camera"),
@@ -6074,14 +6074,14 @@ __DARKLUA_CONTINUE_76=true until true if not __DARKLUA_CONTINUE_76 then break en
 			TotalButtons = TotalButtons + 1
 			local BoxIcon = Library:GetCustomIcon(IconName)
 
-			
+
 			local Button = New("TextButton", {
 				BackgroundTransparency = 1, 
 				Size = UDim2.new(0, 0, 1, 0), 
 				Text = "",
 				Parent = TabButtonRow,
 			})
-			
+
 
 			local ButtonIcon
 			if BoxIcon then
@@ -6099,7 +6099,7 @@ __DARKLUA_CONTINUE_76=true until true if not __DARKLUA_CONTINUE_76 then break en
 				})
 			end
 
-			
+
 			local Indicator = New("Frame", {
 				AnchorPoint = Vector2.new(0.5, 1),
 				BackgroundColor3 = "AccentColor",
@@ -6142,7 +6142,7 @@ __DARKLUA_CONTINUE_76=true until true if not __DARKLUA_CONTINUE_76 then break en
 					InnerTabbox.ActiveTab:Hide()
 				end
 
-				
+
 				if ButtonIcon then
 					TweenService:Create(ButtonIcon, InnerTabTweenInfo, { ImageTransparency = 0, ImageColor3 = Library.Scheme.AccentColor }):Play()
 				end
@@ -6154,7 +6154,7 @@ __DARKLUA_CONTINUE_76=true until true if not __DARKLUA_CONTINUE_76 then break en
 			end
 
 			function Tab:Hide()
-				
+
 				if ButtonIcon then
 					TweenService:Create(ButtonIcon, InnerTabTweenInfo, { ImageTransparency = 0.5, ImageColor3 = Library.Scheme.FontColor }):Play()
 				end
@@ -6535,6 +6535,608 @@ end
 
 function Library:CreateWindow(WindowInfo)
 	WindowInfo = Library:Validate(WindowInfo, Templates.Window)
+	
+	
+	
+	
+	local CORRECT_KEY = "Luxy_Premium_2025" 
+	local KEY_FILE = "luxy_key.txt" 
+
+	local DISCORD_LINK = "https://discord.gg/luxyhub"
+	local LOOTLABS_LINK = "https://loot-links.com/s?abc"
+	local LINKVERTISE_LINK = "https://linkvertise.com/s?def"
+	local WORKINK_LINK = "https://workink.net/s?ghi"
+
+	local function hasValidSavedKey()
+		if readfile and isfile and isfile(KEY_FILE) then
+			return readfile(KEY_FILE) == CORRECT_KEY
+		end
+		return false
+	end
+
+	local function saveKeyPermanently()
+		if writefile then writefile(KEY_FILE, CORRECT_KEY) end
+	end
+
+	local function copyToClipboard(link)
+		if setclipboard then setclipboard(link) else print("[LUXY COPY] " .. link) end
+	end
+
+	
+	local keyVerified = false
+	local loadingFinished = false
+
+	
+	local TempGui = Instance.new("ScreenGui")
+	TempGui.Name = "Luxy_KeyAndLoading_Temp"
+	TempGui.IgnoreGuiInset = true
+	TempGui.ResetOnSpawn = false
+
+	local CoreGuiFolder
+	pcall(function()
+		CoreGuiFolder = gethui and gethui() or CoreGui
+	end)
+	if not CoreGuiFolder then
+		CoreGuiFolder = LocalPlayer:FindFirstChildOfClass("PlayerGui")
+	end
+	TempGui.Parent = CoreGuiFolder
+
+	
+	local function runKeySystem()
+		local KeyBg = New("Frame", {
+			Name = "KeyBackground",
+			BackgroundColor3 = Color3.fromRGB(15, 15, 15),
+			BackgroundTransparency = 1,
+			Size = UDim2.fromScale(1, 1),
+			BorderSizePixel = 0,
+			ZIndex = 9000,
+			Parent = TempGui,
+		})
+
+		local KeyCard = New("Frame", {
+			Name = "KeyCard",
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.fromOffset(340, 250),
+			BackgroundColor3 = Color3.fromRGB(22, 22, 22),
+			ClipsDescendants = true,
+			ZIndex = 9001,
+			Parent = KeyBg,
+		})
+		New("UICorner", {CornerRadius = UDim.new(0, 6), Parent = KeyCard})
+		local CardStroke = New("UIStroke", {Color = Color3.fromRGB(44, 44, 44), Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border, Parent = KeyCard})
+
+		local KeyBgImage = New("ImageLabel", {
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			ScaleType = Enum.ScaleType.Crop,
+			Image = "rbxassetid://90569196307367",
+			ZIndex = 9002,
+			Parent = KeyCard,
+		})
+
+		local KeyOverlay = New("Frame", {
+			Size = UDim2.fromScale(1, 1),
+			BackgroundColor3 = Color3.fromRGB(15, 15, 15),
+			BackgroundTransparency = 0.35,
+			BorderSizePixel = 0,
+			ZIndex = 9003,
+			Parent = KeyCard,
+		})
+
+		local MainPage = New("Frame", {
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			ZIndex = 9004,
+			Parent = KeyCard,
+		})
+
+		local Logo = New("ImageLabel", {
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.new(0.5, 0, 0, 55),
+			Size = UDim2.fromOffset(75, 75),
+			BackgroundTransparency = 1,
+			Image = WindowInfo.Icon or "rbxassetid://119236006737744",
+			ZIndex = 9005,
+			Parent = MainPage,
+		})
+
+		local InputRow = New("Frame", {
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.new(0.5, 0, 0, 135),
+			Size = UDim2.fromOffset(300, 32),
+			BackgroundTransparency = 1,
+			ZIndex = 9005,
+			Parent = MainPage,
+		})
+
+		local KeyInput = New("TextBox", {
+			AnchorPoint = Vector2.new(0, 0.5),
+			Position = UDim2.new(0, 0, 0.5, 0),
+			Size = UDim2.fromOffset(260, 32),
+			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
+			BorderSizePixel = 0,
+			PlaceholderText = "Enter your key here...",
+			Text = "",
+			TextColor3 = Color3.fromRGB(230, 230, 230),
+			TextSize = 12,
+			FontFace = Library.Scheme.Font or Font.new("rbxasset://fonts/families/RobotoMono.json"),
+			TextXAlignment = Enum.TextXAlignment.Left,
+			ZIndex = 9006,
+			Parent = InputRow,
+		})
+		New("UICorner", {CornerRadius = UDim.new(0, 4), Parent = KeyInput})
+		local InputStroke = New("UIStroke", {Color = Color3.fromRGB(60, 60, 60), Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border, Parent = KeyInput})
+		New("UIPadding", {PaddingLeft = UDim.new(0, 8), Parent = KeyInput})
+
+		local DiscordBtn = New("ImageButton", {
+			AnchorPoint = Vector2.new(1, 0.5),
+			Position = UDim2.new(1, 0, 0.5, 0),
+			Size = UDim2.fromOffset(32, 32),
+			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
+			BorderSizePixel = 0,
+			Image = "rbxassetid://10734950309",
+			ZIndex = 9006,
+			Parent = InputRow,
+		})
+		New("UICorner", {CornerRadius = UDim.new(0, 4), Parent = DiscordBtn})
+		New("UIStroke", {Color = Color3.fromRGB(60, 60, 60), Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border, Parent = DiscordBtn})
+
+		local ActionRow = New("Frame", {
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.new(0.5, 0, 0, 195),
+			Size = UDim2.fromOffset(300, 32),
+			BackgroundTransparency = 1,
+			ZIndex = 9005,
+			Parent = MainPage,
+		})
+
+		local GetKeyBtn = New("TextButton", {
+			AnchorPoint = Vector2.new(0, 0.5),
+			Position = UDim2.new(0, 0, 0.5, 0),
+			Size = UDim2.fromOffset(142, 32),
+			BackgroundColor3 = Color3.fromRGB(35, 35, 35),
+			BorderSizePixel = 0,
+			Text = "Get Key",
+			TextColor3 = Color3.fromRGB(230, 230, 230),
+			TextSize = 13,
+			FontFace = Library.Scheme.Font or Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.Bold),
+			ZIndex = 9006,
+			Parent = ActionRow,
+		})
+		New("UICorner", {CornerRadius = UDim.new(0, 4), Parent = GetKeyBtn})
+		New("UIStroke", {Color = Color3.fromRGB(60, 60, 60), Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border, Parent = GetKeyBtn})
+
+		local SubmitBtn = New("TextButton", {
+			AnchorPoint = Vector2.new(1, 0.5),
+			Position = UDim2.new(1, 0, 0.5, 0),
+			Size = UDim2.fromOffset(142, 32),
+			BackgroundColor3 = Library.Scheme.AccentColor or Color3.fromRGB(220, 30, 45),
+			BorderSizePixel = 0,
+			Text = "Submit Key",
+			TextColor3 = Color3.fromRGB(255, 255, 255),
+			TextSize = 13,
+			FontFace = Library.Scheme.Font or Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.Bold),
+			ZIndex = 9006,
+			Parent = ActionRow,
+		})
+		New("UICorner", {CornerRadius = UDim.new(0, 4), Parent = SubmitBtn})
+		New("UIStroke", {Color = Library.Scheme.AccentColor or Color3.fromRGB(220, 30, 45), Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border, Parent = SubmitBtn})
+
+		local GetKeyPage = New("Frame", {
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			ZIndex = 9004,
+			Visible = false,
+			Parent = KeyCard,
+		})
+
+		local BackBtn = New("ImageButton", {
+			AnchorPoint = Vector2.new(0, 0),
+			Position = UDim2.new(0, 15, 0, 15),
+			Size = UDim2.fromOffset(20, 20),
+			BackgroundTransparency = 1,
+			Image = "rbxassetid://10709768114",
+			ImageColor3 = Color3.fromRGB(230, 230, 230),
+			ZIndex = 9005,
+			Parent = GetKeyPage,
+		})
+
+		local Title = New("TextLabel", {
+			AnchorPoint = Vector2.new(0.5, 0),
+			Position = UDim2.new(0.5, 0, 0, 15),
+			Size = UDim2.fromOffset(200, 24),
+			BackgroundTransparency = 1,
+			Text = "Select Gateway",
+			TextColor3 = Color3.fromRGB(230, 230, 230),
+			TextSize = 14,
+			FontFace = Library.Scheme.Font or Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.Bold),
+			ZIndex = 9005,
+			Parent = GetKeyPage,
+		})
+
+		local Description = New("TextLabel", {
+			AnchorPoint = Vector2.new(0.5, 0),
+			Position = UDim2.new(0.5, 0, 0, 48),
+			Size = UDim2.fromOffset(280, 32),
+			BackgroundTransparency = 1,
+			Text = "Select a gateway below to obtain your access key.",
+			TextColor3 = Color3.fromRGB(160, 160, 160),
+			TextSize = 11,
+			FontFace = Library.Scheme.Font or Font.new("rbxasset://fonts/families/RobotoMono.json"),
+			TextWrapped = true,
+			TextXAlignment = Enum.TextXAlignment.Center,
+			ZIndex = 9005,
+			Parent = GetKeyPage,
+		})
+
+		local GatewayContainer = New("Frame", {
+			AnchorPoint = Vector2.new(0.5, 1),
+			Position = UDim2.new(0.5, 0, 1, -15),
+			Size = UDim2.fromOffset(240, 144),
+			BackgroundTransparency = 1,
+			ZIndex = 9005,
+			Parent = GetKeyPage,
+		})
+		local ListLayout = New("UIListLayout", {Padding = UDim.new(0, 12), HorizontalAlignment = Enum.HorizontalAlignment.Center, VerticalAlignment = Enum.VerticalAlignment.Center, Parent = GatewayContainer})
+
+		local function createGatewayButton(name, logoId, link)
+			local btn = New("TextButton", {
+				Size = UDim2.new(1, 0, 0, 36),
+				BackgroundColor3 = Color3.fromRGB(42, 42, 42),
+				BorderSizePixel = 0,
+				Text = "",
+				ZIndex = 9006,
+				Parent = GatewayContainer,
+			})
+			New("UICorner", {CornerRadius = UDim.new(0, 4), Parent = btn})
+			local stroke = New("UIStroke", {Color = Color3.fromRGB(75, 75, 75), Thickness = 1, ApplyStrokeMode = Enum.ApplyStrokeMode.Border, Parent = btn})
+
+			local icon = New("ImageLabel", {
+				AnchorPoint = Vector2.new(0, 0.5),
+				Position = UDim2.new(0, 10, 0.5, 0),
+				Size = UDim2.fromOffset(18, 18),
+				BackgroundTransparency = 1,
+				Image = "rbxassetid://" .. logoId,
+				ImageColor3 = Color3.fromRGB(255, 255, 255),
+				ZIndex = 9007,
+				Parent = btn,
+			})
+
+			local label = New("TextLabel", {
+				AnchorPoint = Vector2.new(0, 0.5),
+				Position = UDim2.new(0, 38, 0.5, 0),
+				Size = UDim2.new(1, -50, 1, 0),
+				BackgroundTransparency = 1,
+				Text = name,
+				TextColor3 = Color3.fromRGB(245, 245, 245),
+				TextSize = 13,
+				FontFace = Library.Scheme.Font or Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.Bold),
+				TextXAlignment = Enum.TextXAlignment.Left,
+				ZIndex = 9007,
+				Parent = btn,
+			})
+
+			btn.MouseEnter:Connect(function()
+				TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}):Play()
+				TweenService:Create(stroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(110, 110, 110)}):Play()
+				TweenService:Create(icon, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 16, 0.5, 0)}):Play()
+				TweenService:Create(label, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 44, 0.5, 0)}):Play()
+			end)
+			btn.MouseLeave:Connect(function()
+				TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(42, 42, 42)}):Play()
+				TweenService:Create(stroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(75, 75, 75)}):Play()
+				TweenService:Create(icon, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 10, 0.5, 0)}):Play()
+				TweenService:Create(label, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 38, 0.5, 0)}):Play()
+			end)
+
+			btn.MouseButton1Click:Connect(function()
+				copyToClipboard(link)
+				label.Text = "Link Copied!"
+				label.TextColor3 = Color3.fromRGB(100, 255, 100)
+				task.wait(1.5)
+				label.Text = name
+				label.TextColor3 = Color3.fromRGB(245, 245, 245)
+			end)
+		end
+
+		createGatewayButton("Work Ink", "129184989898932", WORKINK_LINK)
+		createGatewayButton("Link Vertise", "113247112230196", LINKVERTISE_LINK)
+		createGatewayButton("Lootlabs", "71295975080619", LOOTLABS_LINK)
+
+		local cBackIn = BackBtn.MouseEnter:Connect(function()
+			TweenService:Create(BackBtn, TweenInfo.new(0.25), {ImageColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+		end)
+		local cBackOut = BackBtn.MouseLeave:Connect(function()
+			TweenService:Create(BackBtn, TweenInfo.new(0.25), {ImageColor3 = Color3.fromRGB(200, 200, 200)}):Play()
+		end)
+
+		local cDiscord = DiscordBtn.MouseButton1Click:Connect(function()
+			copyToClipboard(DISCORD_LINK)
+			DiscordBtn.ImageColor3 = Color3.fromRGB(100, 255, 100)
+			task.wait(1.2)
+			DiscordBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		end)
+
+		local cGetPage = GetKeyBtn.MouseButton1Click:Connect(function()
+			MainPage.Visible = false
+			GetKeyPage.Visible = true
+		end)
+
+		local cBackPage = BackBtn.MouseButton1Click:Connect(function()
+			GetKeyPage.Visible = false
+			MainPage.Visible = true
+		end)
+
+		local function shakeCard()
+			local origPos = KeyCard.Position
+			local t = 0.05
+			local sInfo = TweenInfo.new(t, Enum.EasingStyle.Linear)
+			local s1 = TweenService:Create(KeyCard, sInfo, {Position = origPos + UDim2.fromOffset(-8, 0)})
+			local s2 = TweenService:Create(KeyCard, sInfo, {Position = origPos + UDim2.fromOffset(8, 0)})
+			local s3 = TweenService:Create(KeyCard, sInfo, {Position = origPos})
+			s1:Play() s1.Completed:Wait()
+			s2:Play() s2.Completed:Wait()
+			s1:Play() s1.Completed:Wait()
+			s2:Play() s2.Completed:Wait()
+			s3:Play()
+		end
+
+		local cSubmit = SubmitBtn.MouseButton1Click:Connect(function()
+			local entered = KeyInput.Text
+			if entered == CORRECT_KEY then
+				KeyInput.Text = "KEY VERIFIED!"
+				KeyInput.TextColor3 = Color3.fromRGB(100, 255, 100)
+				TweenService:Create(InputStroke, TweenInfo.new(0.3), {Color = Color3.fromRGB(100, 255, 100)}):Play()
+				task.wait(1.0)
+
+				
+				if cBackIn then cBackIn:Disconnect() end
+				if cBackOut then cBackOut:Disconnect() end
+				if cDiscord then cDiscord:Disconnect() end
+				if cGetPage then cGetPage:Disconnect() end
+				if cBackPage then cBackPage:Disconnect() end
+				if cSubmit then cSubmit:Disconnect() end
+
+				local fadeInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+				for _, d in ipairs(KeyCard:GetDescendants()) do
+					if d:IsA("TextLabel") or d:IsA("TextBox") then
+						TweenService:Create(d, fadeInfo, {TextTransparency = 1}):Play()
+					elseif d:IsA("ImageLabel") or d:IsA("ImageButton") then
+						TweenService:Create(d, fadeInfo, {ImageTransparency = 1}):Play()
+					elseif d:IsA("Frame") or d:IsA("TextButton") then
+						TweenService:Create(d, fadeInfo, {BackgroundTransparency = 1}):Play()
+					end
+				end
+				local bgTween = TweenService:Create(KeyBg, fadeInfo, {BackgroundTransparency = 1})
+				bgTween:Play()
+				bgTween.Completed:Connect(function()
+					KeyBg:Destroy()
+					saveKeyPermanently()
+					keyVerified = true 
+				end)
+			else
+				KeyInput.Text = "INVALID KEY!"
+				KeyInput.TextColor3 = Color3.fromRGB(255, 50, 50)
+				TweenService:Create(InputStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 50, 50)}):Play()
+				shakeCard()
+				task.wait(1.2)
+				KeyInput.Text = ""
+				KeyInput.TextColor3 = Color3.fromRGB(230, 230, 230)
+				TweenService:Create(InputStroke, TweenInfo.new(0.3), {Color = Color3.fromRGB(60, 60, 60)}):Play()
+			end
+		end)
+	end
+
+	
+	local function runLoadingScreen(onComplete)
+		local LoadingScreenActive = true
+
+		local LoadingBg = New("Frame", {
+			Name = "LoadingBackground",
+			BackgroundColor3 = Color3.fromRGB(15, 15, 15),
+			BackgroundTransparency = 0.25, 
+			Size = UDim2.fromScale(1, 1),
+			BorderSizePixel = 0,
+			ZIndex = 9500,
+			Parent = TempGui,
+		})
+
+		
+		local LoadingCenter = New("Frame", {
+			Name = "CenterContainer",
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.fromOffset(300, 250),
+			BackgroundTransparency = 1,
+			ZIndex = 9501,
+			Parent = LoadingBg,
+		})
+
+		
+		local LoadingLogo = New("ImageLabel", {
+			Name = "Logo",
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.new(0.5, 0, 0, 65),
+			Size = UDim2.fromOffset(100, 100),
+			BackgroundTransparency = 1,
+			Image = WindowInfo.Icon or "rbxassetid://119236006737744", 
+			ZIndex = 9502,
+			Parent = LoadingCenter,
+		})
+
+		
+		local LoadingTrack = New("Frame", {
+			Name = "BarTrack",
+			AnchorPoint = Vector2.new(0.5, 0),
+			Position = UDim2.new(0.5, 0, 0, 145),
+			Size = UDim2.fromOffset(240, 6),
+			BackgroundColor3 = Color3.fromRGB(35, 35, 35),
+			BorderSizePixel = 0,
+			ZIndex = 9502,
+			Parent = LoadingCenter,
+		})
+		New("UICorner", {CornerRadius = UDim.new(0, 3), Parent = LoadingTrack})
+
+		
+		local LoadingFill = New("Frame", {
+			Name = "BarFill",
+			Size = UDim2.new(0, 0, 1, 0),
+			BackgroundColor3 = Library.Scheme.AccentColor or Color3.fromRGB(220, 30, 45), 
+			BorderSizePixel = 0,
+			ZIndex = 9503,
+			Parent = LoadingTrack,
+		})
+		New("UICorner", {CornerRadius = UDim.new(0, 3), Parent = LoadingFill})
+
+		
+		local LoadingStatus = New("TextLabel", {
+			Name = "StatusLabel",
+			AnchorPoint = Vector2.new(0, 0),
+			Position = UDim2.new(0.5, -120, 0, 158),
+			Size = UDim2.fromOffset(180, 20),
+			BackgroundTransparency = 1,
+			FontFace = Library.Scheme.Font or Font.new("rbxasset://fonts/families/RobotoMono.json"),
+			Text = "Connecting to Luxy Premium...",
+			TextColor3 = Color3.fromRGB(180, 180, 180),
+			TextSize = 11,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			ZIndex = 9502,
+			Parent = LoadingCenter,
+		})
+
+		
+		local LoadingPercent = New("TextLabel", {
+			Name = "PercentageLabel",
+			AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.new(0.5, 120, 0, 158),
+			Size = UDim2.fromOffset(60, 20),
+			BackgroundTransparency = 1,
+			FontFace = Library.Scheme.Font or Font.new("rbxasset://fonts/families/RobotoMono.json", Enum.FontWeight.SemiBold),
+			Text = "0%",
+			TextColor3 = Library.Scheme.AccentColor or Color3.fromRGB(220, 30, 45),
+			TextSize = 11,
+			TextXAlignment = Enum.TextXAlignment.Right,
+			ZIndex = 9502,
+			Parent = LoadingCenter,
+		})
+
+		local originalSize = UDim2.fromOffset(100, 100)
+		local hoverSize = UDim2.fromOffset(112, 112)
+		local zoomInInfo = TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+		local zoomOutInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+		local connEnter = LoadingLogo.MouseEnter:Connect(function()
+			TweenService:Create(LoadingLogo, zoomInInfo, {Size = hoverSize}):Play()
+		end)
+		local connLeave = LoadingLogo.MouseLeave:Connect(function()
+			TweenService:Create(LoadingLogo, zoomOutInfo, {Size = originalSize}):Play()
+		end)
+
+		task.spawn(function()
+			while LoadingScreenActive and ScreenGui.Parent do
+				local currentPercent = math.floor(LoadingFill.Size.X.Scale * 100)
+				LoadingPercent.Text = currentPercent .. "%"
+				RunService.RenderStepped:Wait()
+			end
+		end)
+
+		local function setProgress(targetScale, duration)
+			local tInfo = TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+			local t = TweenService:Create(LoadingFill, tInfo, {Size = UDim2.new(targetScale, 0, 1, 0)})
+			t:Play()
+			return t
+		end
+
+		task.wait(1.0)
+		LoadingStatus.Text = "Verifying security credentials..."
+		setProgress(0.25, 1.2)
+		task.wait(1.4)
+
+		LoadingStatus.Text = "Loading core Luxy database..."
+		setProgress(0.55, 1.5)
+		task.wait(1.7)
+
+		LoadingStatus.Text = "Compiling dependencies & UI registry..."
+		setProgress(0.85, 1.0)
+		task.wait(1.2)
+
+		LoadingStatus.Text = "Welcome back, " .. LocalPlayer.Name .. "!"
+		setProgress(1.0, 0.8)
+		task.wait(1.0)
+
+		LoadingScreenActive = false
+
+		if connEnter then connEnter:Disconnect() end
+		if connLeave then connLeave:Disconnect() end
+
+		TweenService:Create(LoadingLogo, TweenInfo.new(0.3), {Size = originalSize}):Play()
+
+		LoadingStatus.Text = "Successfully Loaded!"
+		local fInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+		for _, child in LoadingCenter:GetChildren() do
+			if child:IsA("TextLabel") then
+				TweenService:Create(child, fInfo, {TextTransparency = 1}):Play()
+			elseif child:IsA("ImageLabel") then
+				TweenService:Create(child, fInfo, {ImageTransparency = 1}):Play()
+			elseif child:IsA("Frame") then
+				TweenService:Create(child, fInfo, {BackgroundTransparency = 1}):Play()
+				local f = child:FindFirstChild("BarFill")
+				if f then TweenService:Create(f, fInfo, {BackgroundTransparency = 1}):Play() end
+			end
+		end
+
+		task.wait(0.3)
+
+		local bgTween = TweenService:Create(LoadingBg, fInfo, {BackgroundTransparency = 1})
+		bgTween:Play()
+
+		bgTween.Completed:Connect(function()
+			LoadingBg:Destroy()
+			if onComplete then onComplete() end
+		end)
+	end
+
+	
+	
+	
+	local UseKeySystem = WindowInfo.KeySettings ~= nil 
+
+	if UseKeySystem then
+		
+		CORRECT_KEY = WindowInfo.KeySettings.Key or CORRECT_KEY
+		DISCORD_LINK = WindowInfo.KeySettings.Discord or DISCORD_LINK
+		LOOTLABS_LINK = WindowInfo.KeySettings.Lootlabs or LOOTLABS_LINK
+		LINKVERTISE_LINK = WindowInfo.KeySettings.Linkvertise or LINKVERTISE_LINK
+		WORKINK_LINK = WindowInfo.KeySettings.Workink or WORKINK_LINK
+
+		if hasValidSavedKey() then
+			keyVerified = true
+		else
+			
+			task.spawn(runKeySystem)
+			repeat task.wait(0.2) until keyVerified
+		end
+	else
+		
+		keyVerified = true
+	end
+
+	
+	local runLoading = true
+	task.spawn(function()
+		runLoadingScreen(function()
+			runLoading = false
+		end)
+	end)
+
+	repeat task.wait(0.2) until not runLoading
+
+	
+	TempGui:Destroy()
+	
+	
 	local ViewportSize= workspace.CurrentCamera.ViewportSize
 	if RunService:IsStudio()
 		and ViewportSize.X <= 5
@@ -6620,7 +7222,7 @@ function Library:CreateWindow(WindowInfo)
 		Library.KeybindFrame.Position = UDim2.new(0, 6, 0.5, 0)
 		Library.KeybindFrame.Visible = false
 
-		
+
 		MainFrame = New("TextButton", {
 			BackgroundColor3 = "BackgroundColor",
 			BackgroundTransparency = 0.12, 
@@ -6635,7 +7237,7 @@ function Library:CreateWindow(WindowInfo)
 		table.insert(Library.Scales, New("UIScale", { Parent = MainFrame }))
 		Library:AddOutline(MainFrame)
 
-		
+
 		New("UIGradient", {
 			Color = ColorSequence.new({
 				ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
@@ -6645,7 +7247,7 @@ function Library:CreateWindow(WindowInfo)
 			Parent = MainFrame
 		})
 
-		
+
 		local DropShadow = New("ImageLabel", {
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.fromScale(0.5, 0.5),
@@ -6726,13 +7328,13 @@ function Library:CreateWindow(WindowInfo)
 			Size = UDim2.new(0, InitialLeftWidth, 1, 0),
 			Parent = TopBar,
 		})
-		
+
 
 		if WindowInfo.Icon then
 			WindowIcon = New("ImageLabel", {
 				Image = (tonumber(WindowInfo.Icon)
-and{(string.format("rbxassetid://%d", WindowInfo.Icon)
-)}or{WindowInfo.Icon})[1],
+					and{(string.format("rbxassetid://%d", WindowInfo.Icon)
+						)}or{WindowInfo.Icon})[1],
 				Size = UDim2.fromOffset(50, 50),
 				ScaleType = Enum.ScaleType.Fit,
 				BackgroundTransparency = 1,
@@ -6741,9 +7343,9 @@ and{(string.format("rbxassetid://%d", WindowInfo.Icon)
 				Parent = TitleHolder,
 			})
 
-			
-			
-			
+
+
+
 			local LogoSensor = New("TextButton", {
 				Size = UDim2.fromScale(1, 1),
 				BackgroundTransparency = 1,
@@ -6752,7 +7354,7 @@ and{(string.format("rbxassetid://%d", WindowInfo.Icon)
 			})
 
 			LogoSensor.MouseEnter:Connect(function()
-				
+
 				TweenService:Create(WindowIcon, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
 					Size = UDim2.fromOffset(60, 60),
 					ImageColor3 = Color3.new(1, 1, 1) 
@@ -6760,14 +7362,14 @@ and{(string.format("rbxassetid://%d", WindowInfo.Icon)
 			end)
 
 			LogoSensor.MouseLeave:Connect(function()
-				
+
 				TweenService:Create(WindowIcon, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
 					Size = UDim2.fromOffset(50, 50),
 					ImageColor3 = Color3.fromRGB(230, 230, 230) 
 				}):Play()
 			end)
 
-			
+
 			WindowIcon.ImageColor3 = Color3.fromRGB(230, 230, 230)
 		end
 
@@ -6802,7 +7404,7 @@ and{(string.format("rbxassetid://%d", WindowInfo.Icon)
 			Parent = TopBar,
 		})
 
-		
+
 		SearchBox = New("TextBox", {
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, 0, 0.5, 0),
@@ -7137,13 +7739,13 @@ and{(string.format("rbxassetid://%d", WindowInfo.Icon)
 			20 + Radius
 		)
 		for _, Tab in Library.Tabs do
-local __DARKLUA_CONTINUE_102=false repeat			if Tab.IsKeyTab then
-__DARKLUA_CONTINUE_102=true				break
-			end
-			for _, Tabbox in Tab.Tabboxes do
-				Tabbox:UpdateCorners()
-			end
-__DARKLUA_CONTINUE_102=true until true if not __DARKLUA_CONTINUE_102 then break end		end
+			local __DARKLUA_CONTINUE_102=false repeat			if Tab.IsKeyTab then
+					__DARKLUA_CONTINUE_102=true				break
+				end
+				for _, Tabbox in Tab.Tabboxes do
+					Tabbox:UpdateCorners()
+				end
+				__DARKLUA_CONTINUE_102=true until true if not __DARKLUA_CONTINUE_102 then break end		end
 	end
 
 	local function ApplyCompact()
@@ -7158,30 +7760,30 @@ __DARKLUA_CONTINUE_102=true until true if not __DARKLUA_CONTINUE_102 then break 
 			WindowIcon.Visible = IsCompact
 		end
 		for _, Button in Library.TabButtons do
-local __DARKLUA_CONTINUE_104=false repeat			if not Button.Icon then
-__DARKLUA_CONTINUE_104=true				break
-			end
-			Button.Label.Visible = not IsCompact
-			Button.Padding.PaddingBottom = UDim.new(
-				0,
-				IsCompact and 6 or 11
-			)
-			Button.Padding.PaddingLeft = UDim.new(
-				0,
-				IsCompact and 6 or 12
-			)
-			Button.Padding.PaddingRight = UDim.new(
-				0,
-				IsCompact and 6 or 12
-			)
-			Button.Padding.PaddingTop = UDim.new(
-				0,
-				IsCompact and 6 or 11
-			)
-			Button.Icon.SizeConstraint = IsCompact
-				and Enum.SizeConstraint.RelativeXY
-				or Enum.SizeConstraint.RelativeYY
-__DARKLUA_CONTINUE_104=true until true if not __DARKLUA_CONTINUE_104 then break end		end
+			local __DARKLUA_CONTINUE_104=false repeat			if not Button.Icon then
+					__DARKLUA_CONTINUE_104=true				break
+				end
+				Button.Label.Visible = not IsCompact
+				Button.Padding.PaddingBottom = UDim.new(
+					0,
+					IsCompact and 6 or 11
+				)
+				Button.Padding.PaddingLeft = UDim.new(
+					0,
+					IsCompact and 6 or 12
+				)
+				Button.Padding.PaddingRight = UDim.new(
+					0,
+					IsCompact and 6 or 12
+				)
+				Button.Padding.PaddingTop = UDim.new(
+					0,
+					IsCompact and 6 or 11
+				)
+				Button.Icon.SizeConstraint = IsCompact
+					and Enum.SizeConstraint.RelativeXY
+					or Enum.SizeConstraint.RelativeYY
+				__DARKLUA_CONTINUE_104=true until true if not __DARKLUA_CONTINUE_104 then break end		end
 	end
 	function Window:IsSidebarCompacted()
 		return IsCompact
@@ -7263,7 +7865,7 @@ __DARKLUA_CONTINUE_104=true until true if not __DARKLUA_CONTINUE_104 then break 
 		end
 
 		local TabButton		
-local TabLabel
+		local TabLabel
 		local TabIcon
 		local TabIndicator 
 
@@ -7293,13 +7895,13 @@ local TabLabel
 					ScaleType = Enum.ScaleType.Fit,
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					Position = UDim2.fromScale(0.5, 0.5),
-					
+
 					Size = UDim2.fromOffset(28, 28), 
 					Parent = TabButton,
 				})
 			end
 
-			
+
 			TabIndicator = New("Frame", {
 				BackgroundColor3 = "FontColor", 
 				BorderSizePixel = 0,
@@ -8144,8 +8746,8 @@ local TabLabel
 		Icon = Icon or "key"
 		local TabButton, TabLabel, TabIcon, TabContainer
 		Icon = (Icon == "key" and{KeyIcon
-}or{(Library:GetCustomIcon(Icon)
-)})[1]		do
+		}or{(Library:GetCustomIcon(Icon)
+			)})[1]		do
 			TabButton = New("TextButton", {
 				BackgroundTransparency = 1,
 				Size = UDim2.new(1, 0, 0, 44),
