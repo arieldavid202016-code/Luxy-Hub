@@ -16,7 +16,7 @@ local b = {
 	[89469502395769] = "Kalb.lua",
 	[95082159892680] = "speed keyboard escape.lua",
 	[118941584817777] = "speed keyboard escape.lua",
-	[118941584817777] = "grow a garden 2.lua",
+	[97598239454123] = "grow a garden 2.lua",
 }
 
 local c = b[game.PlaceId]
