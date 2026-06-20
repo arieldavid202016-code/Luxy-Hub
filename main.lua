@@ -14,8 +14,6 @@ end
 
 local b = {
 	[89469502395769] = "Kalb.lua",
-	[107646426076756] = "build-a-ring-farm.lua",
-	[92416421522960] = "slime-rng.lua",
 	[95082159892680] = "speed-keyboard-escape.lua",
 	[118941584817777] = "speed-keyboard-escape.lua",
 }
