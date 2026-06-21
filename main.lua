@@ -13,7 +13,7 @@ if not game:IsLoaded() then
 end
 
 local b = {
-	[89469502395769] = "kalb.lua",
+	[89469502395769] = "Kalb.lua",
 	[95082159892680] = "speed keyboard escape.lua",
 	[118941584817777] = "speed keyboard escape.lua",
 	[97598239454123] = "grow a garden 2.lua",
