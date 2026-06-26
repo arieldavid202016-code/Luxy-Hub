@@ -1,30 +1,30 @@
-local cloneref = (
-    cloneref
-    or clonereference
-    or function(instance: any)
-        return instance
-    end
-)
-local CoreGui: CoreGui = cloneref(game:GetService("CoreGui"))
-local Players: Players = cloneref(game:GetService("Players"))
-local RunService: RunService = cloneref(game:GetService("RunService"))
-local SoundService: SoundService = cloneref(game:GetService("SoundService"))
-local UserInputService: UserInputService = cloneref(game:GetService("UserInputService"))
-local TextService: TextService = cloneref(game:GetService("TextService"))
-local Teams: Teams = cloneref(game:GetService("Teams"))
-local TweenService: TweenService = cloneref(game:GetService("TweenService"))
+local SharedServices = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/Omnie7/Luxy-Hub/refs/heads/main/Shared/Services.lua"
+))()
+local SharedUtils = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/Omnie7/Luxy-Hub/refs/heads/main/Shared/Utils.lua"
+))()
+local SharedSchemeHelpers = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/Omnie7/Luxy-Hub/refs/heads/main/Shared/SchemeHelpers.lua"
+))()
 
-local getgenv = getgenv or function()
-    return shared
-end
-local setclipboard = setclipboard or nil
-local protectgui = protectgui or (syn and syn.protect_gui) or function() end
-local gethui = gethui or function()
-    return CoreGui
-end
+local cloneref = SharedServices.cloneref
+local CoreGui: CoreGui = SharedServices.CoreGui
+local Players: Players = SharedServices.Players
+local RunService: RunService = SharedServices.RunService
+local SoundService: SoundService = SharedServices.SoundService
+local UserInputService: UserInputService = SharedServices.UserInputService
+local TextService: TextService = SharedServices.TextService
+local Teams: Teams = SharedServices.Teams
+local TweenService: TweenService = SharedServices.TweenService
 
-local LocalPlayer = Players.LocalPlayer or Players.PlayerAdded:Wait()
-local Mouse = cloneref(LocalPlayer:GetMouse())
+local getgenv = SharedServices.getgenv
+local setclipboard = SharedServices.setclipboard
+local protectgui = SharedServices.protectgui
+local gethui = SharedServices.gethui
+
+local LocalPlayer = SharedServices.LocalPlayer
+local Mouse = SharedServices.Mouse
 
 local Labels = {}
 local Buttons = {}
@@ -226,315 +226,70 @@ else
         or Vector2.new(480, 360)
 end
 
-local Templates = {
-    Frame = { BorderSizePixel = 0 },
-    ImageLabel = { BackgroundTransparency = 1, BorderSizePixel = 0 },
-    ImageButton = { AutoButtonColor = false, BorderSizePixel = 0 },
-    ScrollingFrame = { BorderSizePixel = 0 },
-    TextLabel = {
-        BorderSizePixel = 0,
-        FontFace = "Font",
-        RichText = true,
-        TextColor3 = "FontColor",
-    },
-    TextButton = {
-        AutoButtonColor = false,
-        BorderSizePixel = 0,
-        FontFace = "Font",
-        RichText = true,
-        TextColor3 = "FontColor",
-    },
-    TextBox = {
-        BorderSizePixel = 0,
-        FontFace = "Font",
-        PlaceholderColor3 = function()
-            local H, S, V = Library.Scheme.FontColor:ToHSV()
-            return Color3.fromHSV(H, S, V / 2)
-        end,
-        Text = "",
-        TextColor3 = "FontColor",
-    },
-    UIListLayout = { SortOrder = Enum.SortOrder.LayoutOrder },
-    UIStroke = { ApplyStrokeMode = Enum.ApplyStrokeMode.Border },
-    Window = {
-        Title = "Luxy Hub",
-        Icon = "rbxassetid://118853753500102",
-        Footer = "luxy.cc • Kick a Lucky Block",
-        Position = UDim2.fromOffset(6, 6),
-        Size = UDim2.fromOffset(720, 480),
-        IconSize = UDim2.fromOffset(26, 26),
-        AutoShow = true,
-        Center = true,
-        Resizable = true,
-        SearchbarSize = UDim2.fromScale(1, 1),
-        GlobalSearch = false,
-        CornerRadius = 5,
-        NotifySide = "Right",
-        ShowCustomCursor = false,
-        Font = Font.new(
-            "rbxasset://fonts/families/RobotoMono.json",
-            Enum.FontWeight.Medium
-        ),
-        ToggleKeybind = Enum.KeyCode.RightControl,
-        MobileButtonsSide = "Left",
-        UnlockMouseWhileOpen = true,
-        EnableSidebarResize = false,
-        EnableCompacting = true,
-        DisableCompactingSnap = false,
-        SidebarCompacted = false,
-        MinContainerWidth = 256,
-        MinSidebarWidth = 128,
-        SidebarCompactWidth = 48,
-        SidebarCollapseThreshold = 0.5,
-        CompactWidthActivation = 128,
-    },
-    Dialog = {
-        Title = "Dialog",
-        Description = "Description",
-        AutoDismiss = true,
-        AutoDestroy = false,
-        OutsideClickDismiss = true,
-        FooterButtons = {},
-        StartHidden = false,
-    },
-    List = {
-        Items = {},
-        Multi = false,
-        MaxHeight = 150,
-        EmptyText = "No items",
-        Callback = function() end,
-        Changed = function() end,
-        Disabled = false,
-        Visible = true,
-    },
-    Toggle = {
-        Text = "Toggle",
-        Default = false,
-        Callback = function() end,
-        Changed = function() end,
-        Risky = false,
-        Disabled = false,
-        Visible = true,
-    },
-    Input = {
-        Text = "Input",
-        Default = "",
-        Finished = false,
-        Numeric = false,
-        ClearTextOnFocus = true,
-        Placeholder = "",
-        AllowEmpty = true,
-        EmptyReset = "---",
-        Callback = function() end,
-        Changed = function() end,
-        Disabled = false,
-        Visible = true,
-    },
-    Slider = {
-        Text = "Slider",
-        Default = 0,
-        Min = 0,
-        Max = 100,
-        Rounding = 0,
-        Prefix = "",
-        Suffix = "",
-        Callback = function() end,
-        Changed = function() end,
-        Disabled = false,
-        Visible = true,
-    },
-    Dropdown = {
-        Values = {},
-        DisabledValues = {},
-        Multi = false,
-        MaxVisibleDropdownItems = 8,
-        Callback = function() end,
-        Changed = function() end,
-        Disabled = false,
-        Visible = true,
-    },
-    Viewport = {
-        Object = nil,
-        Camera = nil,
-        Clone = true,
-        AutoFocus = true,
-        Interactive = false,
-        Height = 200,
-        Visible = true,
-    },
-    Image = {
-        Image = "",
-        Transparency = 0,
-        BackgroundTransparency = 0,
-        Color = Color3.new(1, 1, 1),
-        RectOffset = Vector2.zero,
-        RectSize = Vector2.zero,
-        ScaleType = Enum.ScaleType.Fit,
-        Height = 200,
-        Visible = true,
-    },
-    Video = {
-        Video = "",
-        Looped = false,
-        Playing = false,
-        Volume = 1,
-        Height = 200,
-        Visible = true,
-    },
-    UIPassthrough = {
-        Instance = nil,
-        Height = 24,
-        Visible = true,
-    },
-    KeyPicker = {
-        Text = "KeyPicker",
-        Default = "None",
-        DefaultModifiers = {},
-        Mode = "Toggle",
-        Modes = { "Always", "Toggle", "Hold" },
-        SyncToggleState = false,
-        Callback = function() end,
-        ChangedCallback = function() end,
-        Changed = function() end,
-        Clicked = function() end,
-    },
-    ColorPicker = {
-        Default = Color3.new(1, 1, 1),
-        Callback = function() end,
-        Changed = function() end,
-    },
+local SharedTemplates = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/Omnie7/Luxy-Hub/refs/heads/main/Shared/Templates.lua"
+))()
+local Templates = SharedTemplates(Library)
+Templates.Window = {
+    Title = "Luxy Hub",
+    Icon = "rbxassetid://118853753500102",
+    Footer = "luxy.cc • Kick a Lucky Block",
+    Position = UDim2.fromOffset(6, 6),
+    Size = UDim2.fromOffset(720, 480),
+    IconSize = UDim2.fromOffset(26, 26),
+    AutoShow = true,
+    Center = true,
+    Resizable = true,
+    SearchbarSize = UDim2.fromScale(1, 1),
+    GlobalSearch = false,
+    CornerRadius = 5,
+    NotifySide = "Right",
+    ShowCustomCursor = false,
+    Font = Font.new(
+        "rbxasset://fonts/families/RobotoMono.json",
+        Enum.FontWeight.Medium
+    ),
+    ToggleKeybind = Enum.KeyCode.RightControl,
+    MobileButtonsSide = "Left",
+    UnlockMouseWhileOpen = true,
+    EnableSidebarResize = false,
+    EnableCompacting = true,
+    DisableCompactingSnap = false,
+    SidebarCompacted = false,
+    MinContainerWidth = 256,
+    MinSidebarWidth = 128,
+    SidebarCompactWidth = 48,
+    SidebarCollapseThreshold = 0.5,
+    CompactWidthActivation = 128,
 }
 
-local Places = { Bottom = { 0, 1 }, Right = { 1, 0 } }
-local Sizes = { Left = { 0.5, 1 }, Right = { 0.5, 1 } }
-local SchemeReplaceAlias = {
-    RedColor = "Red",
-    WhiteColor = "White",
-    DarkColor = "Dark",
-}
-local SchemeAlias = {
-    Red = "RedColor",
-    White = "WhiteColor",
-    Dark = "DarkColor",
-}
+local Places = SharedSchemeHelpers.Places
+local Sizes = SharedSchemeHelpers.Sizes
+local SchemeReplaceAlias = SharedSchemeHelpers.SchemeReplaceAlias
+local SchemeAlias = SharedSchemeHelpers.SchemeAlias
 
 local function GetSchemeValue(Index)
-    if not Index then
-        return nil
-    end
-    local ReplaceAliasIndex = SchemeReplaceAlias[Index]
-    if ReplaceAliasIndex
-        and Library.Scheme[ReplaceAliasIndex] ~= nil
-    then
-        Library.Scheme[Index] = Library.Scheme[ReplaceAliasIndex]
-        Library.Scheme[ReplaceAliasIndex] = nil
-        return Library.Scheme[Index]
-    end
-    local AliasIndex = SchemeAlias[Index]
-    if AliasIndex and Library.Scheme[AliasIndex] ~= nil then
-        warn(string.format(
-            "Scheme Value %q is deprecated, please use %q instead.",
-            Index,
-            AliasIndex
-        ))
-        return Library.Scheme[AliasIndex]
-    end
-    return Library.Scheme[Index]
+    return SharedSchemeHelpers.GetSchemeValue(Library, Index)
 end
 
-local function WaitForEvent(Event, Timeout, Condition)
-    local Bindable = Instance.new("BindableEvent")
-    local Connection = Event:Once(function(...)
-        if not Condition
-            or (typeof(Condition) == "function" and Condition(...))
-        then
-            Bindable:Fire(true)
-        else
-            Bindable:Fire(false)
-        end
-    end)
-    task.delay(Timeout, function()
-        Connection:Disconnect()
-        Bindable:Fire(false)
-    end)
-    local Result = Bindable.Event:Wait()
-    Bindable:Destroy()
-    return Result
-end
-
-local function IsMouseInput(Input: InputObject, IncludeM2: boolean?)
-    return Input.UserInputType == Enum.UserInputType.MouseButton1
-        or (IncludeM2 == true
-            and Input.UserInputType == Enum.UserInputType.MouseButton2)
-        or Input.UserInputType == Enum.UserInputType.Touch
-end
+local WaitForEvent = SharedUtils.WaitForEvent
+local IsMouseInput = SharedUtils.IsMouseInput
 local function IsClickInput(Input: InputObject, IncludeM2: boolean?)
-    return IsMouseInput(Input, IncludeM2)
-        and Input.UserInputState == Enum.UserInputState.Begin
-        and Library.IsRobloxFocused
+    return SharedUtils.IsClickInput(Input, IncludeM2, Library.IsRobloxFocused)
 end
-local function IsHoverInput(Input: InputObject)
-    return (
-        Input.UserInputType == Enum.UserInputType.MouseMovement
-        or Input.UserInputType == Enum.UserInputType.Touch
-    )
-        and Input.UserInputState == Enum.UserInputState.Change
-end
+local IsHoverInput = SharedUtils.IsHoverInput
 local function IsDragInput(Input: InputObject, IncludeM2: boolean?)
-    return IsMouseInput(Input, IncludeM2)
-        and (
-            Input.UserInputState == Enum.UserInputState.Begin
-            or Input.UserInputState == Enum.UserInputState.Change
-        )
-        and Library.IsRobloxFocused
+    return SharedUtils.IsDragInput(Input, IncludeM2, Library.IsRobloxFocused)
 end
-
-local function GetTableSize(Table: { [any]: any })
-    local Size = 0
-    for _, _ in Table do
-        Size += 1
-    end
-    return Size
-end
-local function StopTween(Tween: TweenBase)
-    if not (
-        Tween
-        and Tween.PlaybackState == Enum.PlaybackState.Playing
-    ) then
-        return
-    end
-    Tween:Cancel()
-end
-local function Trim(Text: string)
-    return Text:match("^%s*(.-)%s*$")
-end
-local function Round(Value, Rounding)
-    assert(Rounding >= 0, "Invalid rounding number.")
-    if Rounding == 0 then
-        return math.floor(Value)
-    end
-    return tonumber(string.format("%." .. Rounding .. "f", Value))
-end
-
+local GetTableSize = SharedUtils.GetTableSize
+local StopTween = SharedUtils.StopTween
+local Trim = SharedUtils.Trim
+local Round = SharedUtils.Round
 local function GetPlayers(ExcludeLocalPlayer: boolean?)
-    local PlayerList = Players:GetPlayers()
-    if ExcludeLocalPlayer then
-        local Idx = table.find(PlayerList, LocalPlayer)
-        if Idx then
-            table.remove(PlayerList, Idx)
-        end
-    end
-    table.sort(PlayerList, function(Player1, Player2)
-        return Player1.Name:lower() < Player2.Name:lower()
-    end)
-    return PlayerList
+    return SharedUtils.GetPlayers(Players, LocalPlayer, ExcludeLocalPlayer)
 end
 local function GetTeams()
-    local TeamList = Teams:GetTeams()
-    table.sort(TeamList, function(Team1, Team2)
-        return Team1.Name:lower() < Team2.Name:lower()
-    end)
-    return TeamList
+    return SharedUtils.GetTeams(Teams)
 end
 
 function Library:UpdateDependencyBoxes()
