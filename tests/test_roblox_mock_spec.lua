@@ -1,0 +1,123 @@
+--- Unit tests for the Roblox mock layer itself.
+--- Ensures mocks provide correct interfaces for Library module loading.
+--- Run with: busted tests/
+
+package.path = package.path .. ";tests/?.lua"
+local mock = require("roblox_mock")
+
+describe("Color3 mock", function()
+    it("Color3.new creates an object with R, G, B", function()
+        local c = mock.Color3.new(0.5, 0.6, 0.7)
+        assert.are.equal(0.5, c.R)
+        assert.are.equal(0.6, c.G)
+        assert.are.equal(0.7, c.B)
+    end)
+
+    it("Color3.fromRGB converts 0-255 to 0-1 range", function()
+        local c = mock.Color3.fromRGB(255, 0, 128)
+        assert.are.equal(1, c.R)
+        assert.are.equal(0, c.G)
+        assert.is_true(math.abs(c.B - 128/255) < 0.001)
+    end)
+
+    it("Color3:ToHSV returns R, G, B", function()
+        local c = mock.Color3.new(0.1, 0.2, 0.3)
+        local h, s, v = c:ToHSV()
+        assert.are.equal(0.1, h)
+        assert.are.equal(0.2, s)
+        assert.are.equal(0.3, v)
+    end)
+
+    it("Color3.fromHSV creates a Color3", function()
+        local c = mock.Color3.fromHSV(0.5, 0.5, 0.5)
+        assert.is_not_nil(c)
+        assert.are.equal(0.5, c.R)
+    end)
+end)
+
+describe("Vector2 mock", function()
+    it("Vector2.new creates an object with X, Y", function()
+        local v = mock.Vector2.new(10, 20)
+        assert.are.equal(10, v.X)
+        assert.are.equal(20, v.Y)
+    end)
+
+    it("Vector2.zero has X=0 and Y=0", function()
+        assert.are.equal(0, mock.Vector2.zero.X)
+        assert.are.equal(0, mock.Vector2.zero.Y)
+    end)
+end)
+
+describe("Enum mock", function()
+    it("has KeyCode.RightControl", function()
+        assert.is_not_nil(mock.Enum.KeyCode.RightControl)
+    end)
+
+    it("has UserInputType entries", function()
+        assert.is_not_nil(mock.Enum.UserInputType.MouseButton1)
+        assert.is_not_nil(mock.Enum.UserInputType.Touch)
+    end)
+
+    it("has Platform entries", function()
+        assert.is_not_nil(mock.Enum.Platform.Android)
+        assert.is_not_nil(mock.Enum.Platform.IOS)
+    end)
+end)
+
+describe("typeof mock", function()
+    it("detects Color3", function()
+        local c = mock.Color3.new(1, 1, 1)
+        assert.are.equal("Color3", mock.typeof(c))
+    end)
+
+    it("detects Vector2", function()
+        local v = mock.Vector2.new(0, 0)
+        assert.are.equal("Vector2", mock.typeof(v))
+    end)
+
+    it("returns lua type for primitives", function()
+        assert.are.equal("string", mock.typeof("hello"))
+        assert.are.equal("number", mock.typeof(42))
+        assert.are.equal("boolean", mock.typeof(true))
+    end)
+
+    it("returns table for plain tables", function()
+        assert.are.equal("table", mock.typeof({}))
+    end)
+end)
+
+describe("TweenInfo mock", function()
+    it("creates an object with Time", function()
+        local ti = mock.TweenInfo.new(0.5, "style", "dir")
+        assert.are.equal(0.5, ti.Time)
+    end)
+end)
+
+describe("Font mock", function()
+    it("creates a font object", function()
+        local f = mock.Font.new("family", "weight")
+        assert.are.equal("family", f.Family)
+        assert.are.equal("weight", f.Weight)
+    end)
+end)
+
+describe("game mock", function()
+    it("GetService returns a service stub", function()
+        local svc = mock.game:GetService("Players")
+        assert.is_not_nil(svc)
+    end)
+
+    it("IsLoaded returns true", function()
+        assert.is_true(mock.game:IsLoaded())
+    end)
+end)
+
+describe("install()", function()
+    it("sets global Color3", function()
+        mock.install()
+        assert.is_not_nil(_G.Color3)
+        assert.is_not_nil(_G.Enum)
+        assert.is_not_nil(_G.typeof)
+        assert.is_not_nil(_G.game)
+    end)
+end)
