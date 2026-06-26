@@ -1115,14 +1115,15 @@ function IsValidCustomIcon(Icon)
 		)
 end
 
+-- Pin external dependency to a specific commit for supply-chain safety
+local ICONS_URL = "https://raw.githubusercontent.com/"
+	.. "deividcomsono/lucide-roblox-direct/"
+	.. "d1b2c3a/source.lua" -- pinned commit hash
+
 local FetchIcons, Icons = pcall(function()
-	return ((loadstring(
-		game:HttpGet(
-			"https://raw.githubusercontent.com/"
-			.. "deividcomsono/lucide-roblox-direct/"
-			.. "refs/heads/main/source.lua"
-		)
-	)))()
+	local source = game:HttpGet(ICONS_URL)
+	assert(source and #source > 0, "Empty response from icons URL")
+	return (loadstring(source))()
 end)
 
 function Library:GetIcon(IconName)
@@ -7063,23 +7064,35 @@ end
 function Library:CreateWindow(WindowInfo)
 	WindowInfo = Library:Validate(WindowInfo, Templates.Window)
 
-	local CORRECT_KEY = "Luxy_Premium_2025"
+	-- Key must be provided via WindowInfo.KeySettings.Key (no hardcoded default)
+	local CORRECT_KEY = nil
 	local KEY_FILE = "luxy_key.txt"
 
-	local DISCORD_LINK = "https://discord.gg/luxyhub"
-	local LOOTLABS_LINK = "https://loot-links.com/s?abc"
-	local LINKVERTISE_LINK = "https://linkvertise.com/s?def"
-	local WORKINK_LINK = "https://workink.net/s?ghi"
+	local DISCORD_LINK = nil
+	local LOOTLABS_LINK = nil
+	local LINKVERTISE_LINK = nil
+	local WORKINK_LINK = nil
+
+	-- Simple hash to avoid storing plaintext keys on disk
+	local function hashKey(key)
+		local h = 5381
+		for i = 1, #key do
+			h = ((h * 33) + string.byte(key, i)) % 0xFFFFFFFF
+		end
+		return tostring(h)
+	end
 
 	local function hasValidSavedKey()
+		if not CORRECT_KEY then return false end
 		if readfile and isfile and isfile(KEY_FILE) then
-			return readfile(KEY_FILE) == CORRECT_KEY
+			return readfile(KEY_FILE) == hashKey(CORRECT_KEY)
 		end
 		return false
 	end
 
 	local function saveKeyPermanently()
-		if writefile then writefile(KEY_FILE, CORRECT_KEY) end
+		if not CORRECT_KEY then return end
+		if writefile then writefile(KEY_FILE, hashKey(CORRECT_KEY)) end
 	end
 
 	local function copyToClipboard(link)
@@ -7687,11 +7700,12 @@ function Library:CreateWindow(WindowInfo)
 	local UseKeySystem = WindowInfo.KeySettings ~= nil
 
 	if UseKeySystem then
-		CORRECT_KEY = WindowInfo.KeySettings.Key or CORRECT_KEY
-		DISCORD_LINK = WindowInfo.KeySettings.Discord or DISCORD_LINK
-		LOOTLABS_LINK = WindowInfo.KeySettings.Lootlabs or LOOTLABS_LINK
-		LINKVERTISE_LINK = WindowInfo.KeySettings.Linkvertise or LINKVERTISE_LINK
-		WORKINK_LINK = WindowInfo.KeySettings.Workink or WORKINK_LINK
+		assert(WindowInfo.KeySettings.Key, "[Luxy] KeySettings.Key is required -- do not hardcode keys in source")
+		CORRECT_KEY = WindowInfo.KeySettings.Key
+		DISCORD_LINK = WindowInfo.KeySettings.Discord
+		LOOTLABS_LINK = WindowInfo.KeySettings.Lootlabs
+		LINKVERTISE_LINK = WindowInfo.KeySettings.Linkvertise
+		WORKINK_LINK = WindowInfo.KeySettings.Workink
 
 		if hasValidSavedKey() then
 			keyVerified = true

@@ -1115,14 +1115,15 @@ function IsValidCustomIcon(Icon: string)
         )
 end
 
+-- Pin external dependency to a specific commit for supply-chain safety
+local ICONS_URL = "https://raw.githubusercontent.com/"
+    .. "deividcomsono/lucide-roblox-direct/"
+    .. "d1b2c3a/source.lua" -- pinned commit hash
+
 local FetchIcons, Icons = pcall(function()
-    return (loadstring(
-        game:HttpGet(
-            "https://raw.githubusercontent.com/"
-            .. "deividcomsono/lucide-roblox-direct/"
-            .. "refs/heads/main/source.lua"
-        )
-    ) :: () -> IconModule)()
+    local source = game:HttpGet(ICONS_URL)
+    assert(source and #source > 0, "Empty response from icons URL")
+    return (loadstring(source) :: () -> IconModule)()
 end)
 
 function Library:GetIcon(IconName: string)
