@@ -129,9 +129,12 @@ if RunService:IsStudio() then
 		Library.OriginalMinSize = Vector2.new(480, 360)
 	end
 else
-	pcall(function()
+	local platformOk, platformErr = pcall(function()
 		Library.DevicePlatform = UserInputService:GetPlatform()
 	end)
+	if not platformOk then
+		warn("[Luxy] Failed to detect platform: " .. tostring(platformErr))
+	end
 	Library.IsMobile = (
 		Library.DevicePlatform == Enum.Platform.Android
 		or Library.DevicePlatform == Enum.Platform.IOS
@@ -1124,6 +1127,9 @@ local FetchIcons, Icons = pcall(function()
 		)
 	)))()
 end)
+if not FetchIcons then
+	warn("[Luxy] Failed to fetch icon module: " .. tostring(Icons))
+end
 
 function Library:GetIcon(IconName)
 	if not FetchIcons then
@@ -1131,6 +1137,7 @@ function Library:GetIcon(IconName)
 	end
 	local Success, Icon = pcall(Icons.GetAsset, IconName)
 	if not Success then
+		warn(string.format("[Luxy] Failed to get icon %q: %s", tostring(IconName), tostring(Icon)))
 		return
 	end
 	return Icon
@@ -1207,9 +1214,12 @@ local function New(
 	end
 	FillInstance(Properties, Instance)
 	if Properties["Parent"] and not Properties["ZIndex"] then
-		pcall(function()
+		local zOk, zErr = pcall(function()
 			Instance.ZIndex = Properties.Parent.ZIndex
 		end)
+		if not zOk then
+			warn("[Luxy] Failed to inherit ZIndex from parent: " .. tostring(zErr))
+		end
 	end
 	return Instance
 end
@@ -1218,7 +1228,7 @@ local function SafeParentUI(
 	Instance,
 	Parent
 )
-	local success, _error = pcall(function()
+	local success, parentErr = pcall(function()
 		if not Parent then
 			Parent = CoreGui
 		end
@@ -1231,6 +1241,9 @@ local function SafeParentUI(
 		Instance.Parent = DestinationParent
 	end)
 	if not (success and Instance.Parent) then
+		if not success then
+			warn("[Luxy] SafeParentUI failed, falling back to PlayerGui: " .. tostring(parentErr))
+		end
 		Instance.Parent = Library.LocalPlayer:WaitForChild(
 			"PlayerGui",
 			math.huge
@@ -1243,7 +1256,10 @@ local function ParentUI(UI, SkipHiddenUI)
 		SafeParentUI(UI, CoreGui)
 		return
 	end
-	pcall(protectgui, UI)
+	local protectOk, protectErr = pcall(protectgui, UI)
+	if not protectOk then
+		warn("[Luxy] protectgui failed: " .. tostring(protectErr))
+	end
 	SafeParentUI(UI, gethui)
 end
 
@@ -6740,7 +6756,10 @@ function Library:Notify(...)
 	function Data:Destroy()
 		Data.Destroyed = true
 		if typeof(Data.Time) == "Instance" then
-			pcall(Data.Time.Destroy, Data.Time)
+			local destroyOk, destroyErr = pcall(Data.Time.Destroy, Data.Time)
+			if not destroyOk then
+				warn("[Luxy] Failed to destroy notification timer: " .. tostring(destroyErr))
+			end
 		end
 		if DeleteConnection then
 			DeleteConnection:Disconnect()
@@ -7097,9 +7116,12 @@ function Library:CreateWindow(WindowInfo)
 	TempGui.ResetOnSpawn = false
 
 	local CoreGuiFolder
-	pcall(function()
+	local guiOk, guiErr = pcall(function()
 		CoreGuiFolder = gethui and gethui() or CoreGui
 	end)
+	if not guiOk then
+		warn("[Luxy] Failed to get hidden UI folder: " .. tostring(guiErr))
+	end
 	if not CoreGuiFolder then
 		CoreGuiFolder = LocalPlayer:FindFirstChildOfClass("PlayerGui")
 	end
@@ -10484,11 +10506,14 @@ function Library:CreateWindow(WindowInfo)
 		then
 			local OldMouseIconEnabled =
 				UserInputService.MouseIconEnabled
-			pcall(function()
+			local unbindOk, unbindErr = pcall(function()
 				RunService:UnbindFromRenderStep(
 					"ShowCursor"
 				)
 			end)
+			if not unbindOk then
+				warn("[Luxy] Failed to unbind ShowCursor from RenderStep: " .. tostring(unbindErr))
+			end
 			RunService:BindToRenderStep(
 				"ShowCursor",
 				Enum.RenderPriority.Last.Value,

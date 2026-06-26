@@ -23,8 +23,9 @@ if not c then
 	return
 end
 
-pcall(function()
+local ok, err = pcall(function()
     if not loadstring then
+        warn("[Luxy] loadstring is not available in this environment")
         return
     end
 
@@ -36,5 +37,10 @@ pcall(function()
     if f and f ~= "" then
         getgenv().LUXY_SECURE_LOAD = true 
         loadstring(f)()
+    else
+        warn("[Luxy] Failed to fetch game script: empty response for " .. c)
     end
-end)]]
+end)
+if not ok then
+    warn("[Luxy] Script loader error: " .. tostring(err))
+end]]
