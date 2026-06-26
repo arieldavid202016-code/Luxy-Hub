@@ -1,4 +1,4 @@
-local a = getgenv and getgenv()
+--[[local a = getgenv and getgenv()
 if not a then
 	return
 end
@@ -37,4 +37,4 @@ pcall(function()
         getgenv().LUXY_SECURE_LOAD = true 
         loadstring(f)()
     end
-end)
+end)]]
